@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "google-auth-library": "^9.15.0"
+  }
+}
