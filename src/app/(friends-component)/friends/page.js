@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-export default function FriendsPage() {
+function FriendsPage() {
   const [emails, setEmails] = useState([]);
   const [emailInput, setEmailInput] = useState("");
   const [message, setMessage] = useState("");
@@ -145,3 +145,5 @@ export default function FriendsPage() {
     </div>
   );
 }
+
+export default FriendsPage;
