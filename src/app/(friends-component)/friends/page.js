@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 function FriendsPage() {
   const [emails, setEmails] = useState([]);
