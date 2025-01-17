@@ -272,20 +272,17 @@ const Layout = ({ children }) => {
             </div>
           </div>
         </div>
-
-        <main className="w-3/4 p-6">
-          {selectedEntity ? (
-            <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <main className="w-3/4 p-6">
+            {selectedEntity ? (
               <DynamicContent entity={selectedEntity.data} type={selectedEntity.type} />
-            </Suspense>
-          ) : DynamicContent ? (
-            <Suspense fallback={<div>Loading...</div>}>
+            ) : DynamicContent ? (
               <DynamicContent />
-            </Suspense>
-          ) : (
-            <div>Loading...</div>
-          )}
-        </main>
+            ) : (
+              <div>Loading...</div>
+            )}
+          </main>
+        </Suspense>
       </div>
     </div>
   );
