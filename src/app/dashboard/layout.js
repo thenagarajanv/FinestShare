@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import InternalNavbar from "../_components/(NavigationBar)/InternalNavbar/page";
 import DetailsDashboard from "../components/DetailsDashboard";
+import { Suspense } from "react";
 
 const Layout = ({ children }) => {
   const [activeComponent, setActiveComponent] = useState("/DashboardPage");
@@ -269,12 +270,15 @@ const Layout = ({ children }) => {
             </div>
           </div>
         </div>
-
         <main className="w-3/4 p-6">
           {selectedEntity ? (
+            <Suspense fallback={<div>Loading...</div>}>
             <DynamicContent entity={selectedEntity.data} type={selectedEntity.type} />
+            </Suspense>
           ) : DynamicContent ? (
+            <Suspense fallback={<div>Loading...</div>}>
             <DynamicContent />
+            </Suspense>
           ) : (
             <div>Loading...</div>
           )}
