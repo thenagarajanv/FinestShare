@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Navbar from "@/app/_components/(NavigationBar)/ExternalNavbar/page.js"
+import Navbar from "@/app/_components/(NavigationBar)/ExternalNavbar/page.js";
 
 const HomePage = () => {
   const [state, setState] = useState({
@@ -35,6 +35,15 @@ const HomePage = () => {
     ],
   });
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   const handleItemClick = (item) => {
     setState((prevState) => ({
       ...prevState,
@@ -44,7 +53,7 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar/>
+      <Navbar />
       <main
         className="flex flex-col-reverse lg:flex-row items-center lg:justify-center flex-grow max-w-7xl w-full px-6 mx-auto"
         style={{
@@ -98,12 +107,21 @@ const HomePage = () => {
             Keep track of your shared expenses and balances with housemates,
             trips, groups, friends, and family.
           </p>
-          <a
-            href="/auth/signup"
-            className="px-6 py-3 text-lg text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md"
-          >
-            Sign up
-          </a>
+          {isLoggedIn ? (
+            <a
+              href="/dashboard"
+              className="px-6 py-3 text-lg text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md"
+            >
+              Dashboard
+            </a>
+          ) : (
+            <a
+              href="/auth/signup"
+              className="px-6 py-3 text-lg text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md"
+            >
+              Sign up
+            </a>
+          )}
           <div className="mt-4 text-gray-600 text-sm">
             Free for <span className="font-medium">iPhone</span>,{" "}
             <span className="font-medium">Android</span>, and{" "}
@@ -122,9 +140,56 @@ const HomePage = () => {
           </div>
         </div>
       </main>
+      <div className="m-50">
+        <div className="flex justify-center items-center mb-8">
+          <Image
+            src="/img/dashboard1.png"
+            alt="Additional Image"
+            layout="responsive"
+            width={500}
+            height={500}
+            className="object-contain max-w-full"
+          />
+        </div>
+      </div>
+      <div className="m-50">
+        <div className="flex justify-center items-center mb-8">
+          <Image
+            src="/img/dashboard2.png"
+            alt="Additional Image"
+            layout="responsive"
+            width={500}
+            height={500}
+            className="object-contain max-w-full"
+          />
+        </div>
+      </div>
+      <div className="m-50">
+        <div className="flex justify-center items-center mb-8">
+          <Image
+            src="/img/dashboard3.png"
+            alt="Additional Image"
+            layout="responsive"
+            width={500}
+            height={500}
+            className="object-contain max-w-full"
+          />
+        </div>
+      </div>
+      <div className="m-50">
+        <div className="flex justify-center items-center mb-8">
+          <Image
+            src="/img/dashboard4.png"
+            alt="Additional Image"
+            layout="responsive"
+            width={500}
+            height={500}
+            className="object-contain max-w-full"
+          />
+        </div>
+      </div>
     </div>
   );
 };
 
 export default HomePage;
-

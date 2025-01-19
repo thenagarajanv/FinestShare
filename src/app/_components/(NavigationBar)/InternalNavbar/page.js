@@ -6,11 +6,24 @@ import { useRouter } from "next/navigation";
 const InternalNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); 
+    if (token) {
+      setIsLoggedIn(true);
+      fetch("https://fairshare-backend-reti.onrender.com/auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setUserName(data.user.name))
+        .catch((error) => console.error("Error fetching user data:", error));
+    } else {
+      setIsLoggedIn(false);
+    }
   }, []);
 
   const toggleMenu = () => {
@@ -40,12 +53,30 @@ const InternalNavbar = () => {
 
           <div className="hidden md:flex flex-col md:flex-row gap-4">
             {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium shadow-md"
-              >
-                Log Out
-              </button>
+              <div className="relative">
+                <button
+                  onClick={toggleMenu}
+                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-md"
+                >
+                  {userName} ▼
+                </button>
+                {isMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg">
+                    <a
+                      href="/account/settings"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      Your Account
+                    </a>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium shadow-md text-left"
+                    >
+                      Log Out
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <>
                 <a
@@ -88,18 +119,32 @@ const InternalNavbar = () => {
         <div className="md:hidden">
           <div className="px-4 pt-2 pb-3 space-y-1">
             {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="block w-full mt-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium shadow-md text-left"
-              >
-                Log Out
-              </button>
+              <div className="space-y-1">
+                <a
+                  href="/account/settings"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Your Account
+                </a>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium shadow-md text-left"
+                >
+                  Log Out
+                </button>
+              </div>
             ) : (
               <>
-                <a href="/auth/signup" className="block mt-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-md">
+                <a
+                  href="/auth/signup"
+                  className="block mt-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-md"
+                >
                   Sign Up
                 </a>
-                <a href="/auth/login" className="block mt-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-md">
+                <a
+                  href="/auth/login"
+                  className="block mt-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-md"
+                >
                   Log In
                 </a>
               </>

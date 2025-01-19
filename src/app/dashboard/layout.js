@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Suspense } from 'react';
 import { useRouter } from "next/navigation";
 import InternalNavbar from "../_components/(NavigationBar)/InternalNavbar/page";
 import DetailsDashboard from "../components/DetailsDashboard";
@@ -82,9 +81,7 @@ const Layout = ({ children }) => {
     setSelectedEntity(null);
     try {
       const { default: AddGroupComponent } = await import(
-       
         "../(group-component)/group/create/page.js"
-
       );
       setDynamicContent(() => AddGroupComponent);
     } catch (error) {
@@ -272,17 +269,16 @@ const Layout = ({ children }) => {
             </div>
           </div>
         </div>
-        <Suspense fallback={<div>Loading...</div>}>
-          <main className="w-3/4 p-6">
-            {selectedEntity ? (
-              <DynamicContent entity={selectedEntity.data} type={selectedEntity.type} />
-            ) : DynamicContent ? (
-              <DynamicContent />
-            ) : (
-              <div>Loading...</div>
-            )}
-          </main>
-        </Suspense>
+
+        <main className="w-3/4 p-6">
+          {selectedEntity ? (
+            <DynamicContent entity={selectedEntity.data} type={selectedEntity.type} />
+          ) : DynamicContent ? (
+            <DynamicContent />
+          ) : (
+            <div>Loading...</div>
+          )}
+        </main>
       </div>
     </div>
   );

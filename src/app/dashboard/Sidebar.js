@@ -30,7 +30,6 @@ export default function Sidebar() {
   return (
     <div className="flex">
       <div className="w-1/4 bg-gray-800 text-white p-4">
-        {/* <h1 className="text-xl font-bold mb-6">Menu</h1> */}
         <ul className="space-y-4">
           {menuItems.map((item) => (
             <li key={item.path}>
