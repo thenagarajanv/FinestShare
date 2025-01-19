@@ -5,13 +5,13 @@ import React, { useState } from "react";
 const CreateGroup = () => {
   const [groupName, setGroupName] = useState("");
   const [members, setMembers] = useState([{ name: "", email: "" }]);
-  const [groupType, setGroupType] = useState(""); 
+  const [groupType, setGroupType] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   const searchParams = useSearchParams();
-  const token = localStorage.getItem("token"); 
+  const token = localStorage.getItem("token");
 
   const handleAddMember = () => {
     setMembers([...members, { name: "", email: "" }]);
@@ -43,9 +43,9 @@ const CreateGroup = () => {
       return;
     }
 
-    setError(""); 
-    setSuccess(""); 
-    setLoading(true); 
+    setError(""); // Reset error
+    setSuccess(""); // Reset success
+    setLoading(true); // Set loading state
 
     const groupData = {
       groupName: groupName,
@@ -55,7 +55,7 @@ const CreateGroup = () => {
 
     if (!token) {
       setError("You must be logged in to create a group.");
-      setLoading(false);
+      setLoading(false); // Reset loading state
       return;
     }
 
@@ -68,25 +68,25 @@ const CreateGroup = () => {
         },
         body: JSON.stringify(groupData),
       });
-      
+
       console.log(groupData);
 
       const result = await response.json();
 
       console.log(result);
-      
+
       if (response.ok) {
         setSuccess("Group created successfully!");
-        setGroupName(""); 
-        setMembers([{ name: "", email: "" }]); 
-        setGroupType(""); 
+        setGroupName(""); // Reset group name
+        setMembers([{ name: "", email: "" }]); // Reset members
+        setGroupType(""); // Reset group type
       } else {
         setError(result.message || "Failed to create group.");
       }
     } catch (error) {
       setError("Something went wrong. Please try again later.");
     } finally {
-      setLoading(false); 
+      setLoading(false); // Reset loading state
     }
   };
 
@@ -150,7 +150,7 @@ const CreateGroup = () => {
         <select
           className="w-full border border-gray-300 rounded-md p-2 mb-3"
           value={groupType}
-          onChange={(e) => setGroupType(e.target.value)} 
+          onChange={(e) => setGroupType(e.target.value)}
         >
           <option value="">Select Group Type</option>
           <option value="Home">Home</option>
