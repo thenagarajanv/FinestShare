@@ -1,13 +1,13 @@
-"use client"
+"use client";
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 
-const Page = () => {
+const RedirectPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
-    const token = searchParams.get('token'); 
+    const token = searchParams.get('token');
     if (token) {
       localStorage.setItem('token', token);
       router.push('/dashboard');
@@ -21,4 +21,10 @@ const Page = () => {
   );
 }
 
-export default Page;
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RedirectPage />
+    </Suspense>
+  );
+}
