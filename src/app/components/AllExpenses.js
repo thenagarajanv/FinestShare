@@ -32,7 +32,7 @@ const ExpenseDetails = () => {
   const fetchExpenses = async (userID) => {
     try {
       const response = await fetch(
-        `https://fairshare-backend-8kqh.onrender.com/expense/user/${userID}`,
+        `https://fairshare-backend-8kqh.onrender.com/expense/user`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
