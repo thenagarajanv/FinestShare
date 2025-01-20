@@ -1,61 +1,55 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 
 export default function FriendsPage() {
-  const [emails, setEmails] = useState([]);
-  const [emailInput, setEmailInput] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [preview, setPreview] = useState(false);
 
   const handleEmailChange = (e) => {
-    setEmailInput(e.target.value);
+    setEmail(e.target.value);
   };
 
   const handleEmailKeyDown = (e) => {
-    if (e.key === "Enter" && emailInput.trim()) {
-      setEmails((prevEmails) => [...prevEmails, emailInput.trim()]);
-      setEmailInput(""); 
+    if (e.key === "Enter" && email.trim()) {
+      setPreview(true); 
     }
-  };
-
-  const handleDeleteClick = (index) => {
-    setEmails((prevEmails) => prevEmails.filter((_, i) => i !== index));
   };
 
   const handleSendInvite = async () => {
-    if (emails.length === 0) {
-      alert("Please enter at least one email address.");
+    if (!email.trim()) {
+      alert("Please enter an email address.");
       return;
     }
-    
-    const token = localStorage.getItem("token"); 
+
+    const token = localStorage.getItem("token");
     if (!token) {
       alert("You must be logged in to send invites.");
       return;
     }
 
     try {
-      const response = await fetch("https://fairshare-backend-reti.onrender.com/friend/add", {
+      const response = await fetch("https://192.168.0.127:8080/friend/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, 
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
-          emails,
+          friendEmail: email, 
           message,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to send invites.");
+        throw new Error("Failed to send invite.");
       }
 
-      alert("Invitations sent successfully!");
-      setEmails([]);
+      alert("Invitation sent successfully!");
+      setEmail(""); 
       setMessage("");
-      setPreview(false);
+      setPreview(false); 
     } catch (error) {
       alert(error.message);
     }
@@ -67,37 +61,20 @@ export default function FriendsPage() {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Invite Friends</h2>
+      <h2 className="text-2xl font-bold mb-4">Invite Friend</h2>
       <div className="mb-4">
-        <label htmlFor="emails" className="block text-sm font-medium mb-2">
+        <label htmlFor="email" className="block text-sm font-medium mb-2">
           To:
         </label>
         <input
-          id="emails"
+          id="email"
           type="text"
-          value={emailInput}
+          value={email}
           onChange={handleEmailChange}
           onKeyDown={handleEmailKeyDown}
-          placeholder="Enter names or email addresses and press Enter"
+          placeholder="Enter an email address and press Enter"
           className="p-2 border border-gray-300 rounded w-full"
         />
-        <div className="mt-2">
-          {emails.length > 0 && (
-            <ul className="list-disc pl-5">
-              {emails.map((email, index) => (
-                <li key={index} className="flex mr-5 justify-between">
-                  <span>{email}</span>
-                  <button
-                    onClick={() => handleDeleteClick(index)}
-                    className="ml-2 text-red-500"
-                  >
-                    Delete
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
       </div>
       <div className="mb-4">
         <label htmlFor="message" className="block text-sm font-medium mb-2">
@@ -117,13 +94,13 @@ export default function FriendsPage() {
           onClick={handleConfirmInvite}
           className="px-4 py-2 bg-green-500 text-white rounded"
         >
-          Send Invites and Add Friends
+          Send Invite and Add Friend
         </button>
       ) : (
         <div className="border border-gray-300 rounded p-4 mt-4">
           <h3 className="font-semibold text-lg mb-2">Preview:</h3>
           <p className="mb-2">
-            <strong>To:</strong> {emails.join(", ")}
+            <strong>To:</strong> {email}
           </p>
           <p className="mb-2">
             <strong>Message:</strong> {message || "(No message provided)"}

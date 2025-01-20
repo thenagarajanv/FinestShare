@@ -60,7 +60,7 @@ const CreateGroup = () => {
     }
 
     try {
-      const response = await fetch("https://fairshare-backend-reti.onrender.com/group/create", {
+      const response = await fetch("https://fairshare-backend-8kqh.onrender.com/group/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

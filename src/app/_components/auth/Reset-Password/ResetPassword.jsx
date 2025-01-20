@@ -26,7 +26,7 @@ const NewPassword = () => {
     }
 
     try {
-      const response = await fetch("https://fairshare-backend-reti.onrender.com/auth/reset-password", {
+      const response = await fetch("https://fairshare-backend-8kqh.onrender.com/auth/reset-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

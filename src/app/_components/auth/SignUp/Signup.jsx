@@ -6,13 +6,18 @@ import { useRouter } from 'next/navigation';
 const BasicAuthSignup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [password, setPassword] = useState('');
   const router = useRouter();
+
+  const handleTermsAndConditions = () =>{
+    router.push("/auth/TermsAndConditions");
+  }
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://fairshare-backend-reti.onrender.com/auth/signup', {
+      const response = await fetch('https://fairshare-backend-8kqh.onrender.com/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,9 +94,32 @@ const BasicAuthSignup = () => {
               required
             />
           </div>
+          <div className="mb-4">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={acceptedTerms}
+              onChange={() => setAcceptedTerms(!acceptedTerms)}
+              className="mr-2"
+            />
+            <label
+              htmlFor="terms"
+              className="text-sm text-gray-900 dark:text-white"
+            >
+              I accept the{" "}
+              <a onClick={handleTermsAndConditions} className="text-blue-500 hover:underline">
+                Terms and Conditions
+              </a>
+            </label>
+          </div>
           <button
+            disabled={!acceptedTerms}
             type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className={`${
+              acceptedTerms
+                ? "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                : "bg-gray-400 cursor-not-allowed"
+            } text-white font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center`}
           >
             Sign Up
           </button>

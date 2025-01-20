@@ -1,5 +1,4 @@
-
-export async function generateMetadata() {
+async function generateMetadata() {
   const title = 'Login in :: Splitwise';
   const describe = 'Splitwise login page';
 

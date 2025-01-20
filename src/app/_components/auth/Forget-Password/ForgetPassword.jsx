@@ -13,7 +13,7 @@ const ForgotPassword = () => {
     setMessage("");
 
     try {
-      const response = await fetch("https://fairshare-backend-reti.onrender.com/auth/forgot-password", {
+      const response = await fetch("https://fairshare-backend-8kqh.onrender.com/auth/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

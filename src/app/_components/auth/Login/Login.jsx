@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 
 async function auth(router) {
   try {
-    window.location.href = "https://fairshare-backend-reti.onrender.com/auth/google";
+    window.location.href = "https://fairshare-backend-8kqh.onrender.com/auth/google";
     useParams
   } catch (error) {
     console.error("Error during authentication:", error);
@@ -21,7 +21,7 @@ const BasicAuthLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://fairshare-backend-reti.onrender.com/auth/login", {
+      const response = await fetch("https://fairshare-backend-8kqh.onrender.com/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

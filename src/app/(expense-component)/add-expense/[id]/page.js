@@ -56,7 +56,7 @@ const ExpenseComponent = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('https://fairshare-backend-reti.onrender.com/auth/me', {
+        const response = await fetch('https://fairshare-backend-8kqh.onrender.com/auth/me', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`, 
@@ -86,40 +86,48 @@ const ExpenseComponent = () => {
     }
   
     const expenseData = {
-      amount: amount,
-      description: description,
-      paidBy: userID, 
-      groupID: groupID,
-      type: 'group',
-      category: null,
-      image: 'dinner',
-      splits: Object.keys(userAmounts).map((userID) => ({
-        userID: parseInt(userID),
-        amount: userAmounts[userID],
+      amount: parseFloat(amount),
+      description: description.trim(), 
+      paidBy: parseInt(userID), 
+      groupID: parseInt(groupID),
+      type: "group", 
+      category: category.trim(), 
+      image: "dinner.jpg", 
+      splits: Object.keys(splitAmounts).map((userID) => ({
+        userID: parseInt(userID), 
+        amount: parseFloat(splitAmounts[userID]), 
       })),
     };
-  
-    try {
-      const response = await fetch('https://fairshare-backend-reti.onrender.com/api/expenses/add', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`, 
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(expenseData),
+    
+  try {
+    const response = await fetch('https://fairshare-backend-8kqh.onrender.com/expense/add', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(expenseData),
+    });
+
+    console.log('Request payload:', expenseData);
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('Expense created successfully:', data);
+      alert('Expense submitted successfully!');
+    } else {
+      console.error('Failed to create expense.', {
+        status: response.status,
+        responseData: data,
       });
-  
-      const data = await response.json();
-  
-      if (response.ok) {
-        console.log('Expense created:', data);
-      } else {
-        console.error('Failed to create expense. Status:', response.status, 'Response:', data);
-      }
-    } catch (error) {
-      console.error('Error submitting expense:', error);
+      alert(`Failed to submit expense. Error: ${data.message || response.statusText}`);
     }
-  };
+  } catch (error) {
+    console.error('Error submitting expense:', error);
+    alert('An unexpected error occurred while submitting the expense. Please try again.');
+  }
+};
 
   useEffect(() => {
     if (activeContainer === "splitAdjustment") {
@@ -378,7 +386,7 @@ const ExpenseComponent = () => {
   useEffect(() => {
     if (groupID) {
       fetch(
-        `https://fairshare-backend-reti.onrender.com/group/${groupID}/details`,
+        `https://fairshare-backend-8kqh.onrender.com/group/${groupID}/details`,
         {
           method: "GET",
           headers: {
@@ -699,16 +707,6 @@ const ExpenseComponent = () => {
                       Split the expense
                     </button>
                   </div>
-                  {/* <div className="text-md flex justify-center m-3 items-center">
-                    <button className="btn text-black p-2 rounded rounded-md border min-w-[500px] border-black hover:bg-cyan-400 hover:text-white">
-                      You owe the full amount
-                    </button>
-                  </div>
-                  <div className="text-md flex m-3 justify-center items-center">
-                    <button className="btn text-black p-2 rounded rounded-md border min-w-[500px] border-black hover:bg-cyan-400 hover:text-white">
-                      They owe the full amount
-                    </button>
-                  </div> */}
                 </div>
                 <div
                   className="all-btn btn-w-sm"

@@ -11,18 +11,19 @@ const SettingsPage = () => {
   const [newPhone, setNewPhone] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newAvatar, setNewAvatar] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(null); 
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [showPassword, setShowPassword] = useState(false); 
 
   const router = useRouter();
 
   const handleBackToDashboard = () => {
-    router.push("/dashboard"); 
+    router.push("/dashboard");
   };
-
-  useEffect(() => {
+  
+  const fetchUserData = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("https://fairshare-backend-reti.onrender.com/auth/me", {
+      fetch("https://fairshare-backend-8kqh.onrender.com/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -38,36 +39,60 @@ const SettingsPage = () => {
     } else {
       router.push("/auth/login");
     }
-  }, [router]);
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
   };
 
   const handleSaveChanges = () => {
-    const formData = new FormData();
-    formData.append("name", newName);
-    formData.append("email", newEmail);
-    formData.append("phone", newPhone);
-    formData.append("password", newPassword);
-    if (newAvatar) {
-      formData.append("avatar", newAvatar);
+    const updatedData = {};
+    if (newName !== userData.name) updatedData.name = newName;
+    if (newPhone !== (userData.phone || "None")) updatedData.phone = newPhone;
+    if (newPassword) updatedData.password = newPassword;
+    if (newAvatar) updatedData.image = avatarPreview;
+  
+    if (Object.keys(updatedData).length === 0) {
+      alert("No changes to save.");
+      return;
     }
-
-    fetch("https://fairshare-backend-reti.onrender.com/auth/me", {
-      method: "PATCH",
+  
+    fetch("http://192.168.0.127:8080/auth/update", {
+      method: "PUT",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: formData,
+      body: JSON.stringify(updatedData),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        setUserData(data.user);
-        setIsEditing(false);
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to update user data.");
+        }
+        return response.json();
       })
-      .catch((error) => console.error("Error updating user data:", error));
+      .then(() => {
+        setIsEditing(false);
+        fetchUserData(); 
+        alert("Your changes have been saved successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating user data:", error);
+        alert("Failed to save changes. Please try again.");
+      });
   };
+  
+  console.log(
+    "name" , newName,
+    "password" , newPassword,
+    "image" , newAvatar,
+    "phone" , newPassword
+  );
+  
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -77,7 +102,7 @@ const SettingsPage = () => {
       setAvatarPreview(reader.result);
     };
     if (file) {
-      reader.readAsDataURL(file); 
+      reader.readAsDataURL(file);
     }
   };
 
@@ -93,7 +118,7 @@ const SettingsPage = () => {
         <div className="mt-6">
           <div className="flex items-center gap-4">
             <img
-              src={avatarPreview || userData.image || "/img/default-avatar.png"}
+              src={avatarPreview || userData.image || "/img/heart.png"}
               alt="User Avatar"
               className="w-24 h-24 rounded-full object-cover"
             />
@@ -136,16 +161,7 @@ const SettingsPage = () => {
 
             <div className="flex justify-between items-center mt-4">
               <label className="font-medium">Your email address</label>
-              {isEditing ? (
-                <input
-                  type="email"
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
-                />
-              ) : (
                 <span>{userData.email}</span>
-              )}
             </div>
 
             <div className="flex justify-between items-center mt-4">
@@ -165,43 +181,36 @@ const SettingsPage = () => {
             <div className="flex justify-between items-center mt-4">
               <label className="font-medium">Your password</label>
               {isEditing ? (
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
-                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg"
+                  />
+                  <button
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-blue-600 hover:text-blue-700"
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
               ) : (
                 <span>••••••••••</span>
               )}
             </div>
 
-            <div className="flex justify-between items-center mt-4">
-              <label className="font-medium">Your time zone (Default)</label>
-              <span>(GMT+05:30) India</span>
-            </div>
-
-            <div className="flex justify-between items-center mt-4">
-              <label className="font-medium">Language (Default)</label>
-              <span>English</span>
-            </div>
-
-            <div className="flex justify-between items-center mt-4">
-              <label className="font-medium">You are connected with Google.</label>
-              <button className="text-blue-600 hover:text-blue-700">Disconnect</button>
-            </div>
-
             <div className="mt-6 flex justify-end">
               <button
                 onClick={handleEditToggle}
-                className="px-4 py-2 justify-end bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg"
+                className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg"
               >
                 {isEditing ? "Cancel" : "Edit"}
               </button>
               {isEditing && (
                 <button
                   onClick={handleSaveChanges}
-                  className="ml-4 justify-end px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+                  className="ml-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
                 >
                   Save Changes
                 </button>

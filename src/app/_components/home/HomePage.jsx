@@ -52,17 +52,19 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div
+    className="min-h-screen">
       <Navbar />
+    <div className="flex  flex-col min-h-screen">
       <main
-        className="flex flex-col-reverse lg:flex-row items-center lg:justify-center flex-grow max-w-7xl w-full px-6 mx-auto"
-        style={{
-          backgroundImage: "url('/iceimage.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          height: "80vh",
-        }}
-      >
+        className="flex  flex-col-reverse   lg:flex-row items-center lg:justify-center flex-grow max-w-7xl w-full min-h-screen px-6 mx-auto"
+        // style={{
+        //   backgroundImage: "url('/iceimage.jpg')",
+        //   backgroundSize: "cover",
+        //   backgroundPosition: "center",
+          
+        // }}
+        >
         <div className="text-center lg:text-left lg:w-1/2 mt-8 lg:mt-0">
           <h1 className="text-3xl lg:text-4xl font-bold mb-4">
             Less stress when<br />sharing expenses
@@ -78,27 +80,27 @@ const HomePage = () => {
           <div className="flex justify-center lg:justify-start mt-4 mb-4 space-x-4 flex-wrap">
             {state.items.map((item, index) => (
               <button
-                key={index}
-                className="flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white rounded-full shadow-md border-2 border-gray-200 hover:border-purple-600 focus:outline-none"
-                onClick={() => handleItemClick(item)}
-                style={{
-                  borderColor:
-                    state.selectedItem.itemsName === item.itemsName
-                      ? `#${item.textColor}`
-                      : "",
-                }}
+              key={index}
+              className="flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white rounded-full shadow-md border-2 border-gray-200 hover:border-purple-600 focus:outline-none"
+              onClick={() => handleItemClick(item)}
+              style={{
+                borderColor:
+                state.selectedItem.itemsName === item.itemsName
+                ? `#${item.textColor}`
+                : "",
+              }}
               >
                 <Image
                   src={item.itemsImage}
                   alt={item.itemsName}
                   width={48}
                   height={48}
-                  className="rounded-full"
-                />
+                  className="rounded-full "
+                  />
                 <span
-                  className="text-sm mt-2 font-medium text-center"
+                  className="text-sm  mt-2 font-medium text-center"
                   style={{ color: `#${item.textColor}` }}
-                >
+                  >
                 </span>
               </button>
             ))}
@@ -109,15 +111,15 @@ const HomePage = () => {
           </p>
           {isLoggedIn ? (
             <a
-              href="/dashboard"
-              className="px-6 py-3 text-lg text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md"
+            href="/dashboard"
+            className="px-6 py-3 text-lg text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md"
             >
               Dashboard
             </a>
           ) : (
             <a
-              href="/auth/signup"
-              className="px-6 py-3 text-lg text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md"
+            href="/auth/signup"
+            className="px-6 py-3 text-lg text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md"
             >
               Sign up
             </a>
@@ -128,15 +130,15 @@ const HomePage = () => {
             <span className="font-medium">web</span>.
           </div>
         </div>
-        <div className="lg:w-1/2 flex justify-center mb-8 lg:mb-0 z-50">
-          <div className="w-48 h-48 sm:w-64 sm:h-64 lg:w-96 lg:h-96">
+        <div className="lg:w-1/2 flex justify-center mb-8 lg:mb-0 ">
+          <div className="w-48  h-48 sm:w-64 sm:h-64 lg:w-96 lg:h-96">
             <Image
               src={state.selectedItem.itemsImage}
               alt={state.selectedItem.itemsName}
-              className="w-full h-full object-contain"
+              className="w-full h-full   object-contain -z-10"
               width={600}
               height={600}
-            />
+              />
           </div>
         </div>
       </main>
@@ -149,7 +151,7 @@ const HomePage = () => {
             width={500}
             height={500}
             className="object-contain max-w-full"
-          />
+            />
         </div>
       </div>
       <div className="m-50">
@@ -161,7 +163,7 @@ const HomePage = () => {
             width={500}
             height={500}
             className="object-contain max-w-full"
-          />
+            />
         </div>
       </div>
       <div className="m-50">
@@ -173,7 +175,7 @@ const HomePage = () => {
             width={500}
             height={500}
             className="object-contain max-w-full"
-          />
+            />
         </div>
       </div>
       <div className="m-50">
@@ -185,10 +187,11 @@ const HomePage = () => {
             width={500}
             height={500}
             className="object-contain max-w-full"
-          />
+            />
         </div>
       </div>
     </div>
+            </div>
   );
 };
 

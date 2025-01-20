@@ -7,19 +7,23 @@ const InternalNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
+  const [profileImage, setProfileImage] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
-      fetch("https://fairshare-backend-reti.onrender.com/auth/me", {
+      fetch("https://fairshare-backend-8kqh.onrender.com/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
         .then((response) => response.json())
-        .then((data) => setUserName(data.user.name))
+        .then((data) => {
+          setUserName(data.user.name);
+          setProfileImage(data.user.image); 
+        })
         .catch((error) => console.error("Error fetching user data:", error));
     } else {
       setIsLoggedIn(false);
@@ -56,8 +60,13 @@ const InternalNavbar = () => {
               <div className="relative">
                 <button
                   onClick={toggleMenu}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-md"
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-md"
                 >
+                  <img
+                    src={profileImage || "/img/default-profile.png"} // Fallback to a default image
+                    alt="Profile"
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
                   {userName} ▼
                 </button>
                 {isMenuOpen && (
