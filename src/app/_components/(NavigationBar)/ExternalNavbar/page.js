@@ -87,7 +87,7 @@ const ExternalNavbar = () => {
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="px-4 pt-2 pb-3 space-y-1">
-            <a href="#features" className="block text-gray-600 hover:text-purple-600 font-medium">
+            {/* <a href="#features" className="block text-gray-600 hover:text-purple-600 font-medium">
               Features
             </a>
             <a href="#about" className="block text-gray-600 hover:text-purple-600 font-medium">
@@ -95,7 +95,7 @@ const ExternalNavbar = () => {
             </a>
             <a href="#contact" className="block text-gray-600 hover:text-purple-600 font-medium">
               Contact
-            </a>
+            </a> */}
             {isLoggedIn ? (
               <button
                 onClick={handleLogout}
