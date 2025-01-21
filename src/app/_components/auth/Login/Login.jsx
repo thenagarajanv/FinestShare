@@ -34,14 +34,13 @@ const BasicAuthLogin = () => {
       if (response.ok) {
         localStorage.setItem("token", data.token);
 
-        document.cookie = `token=${data.token}; path=/; secure; HttpOnly; max-age=86400`; // 1-day expiration
+        document.cookie = `token=${data.token}; path=/; secure; HttpOnly; max-age=86400`; 
 
         alert("Logged in successfully");
         console.log(data);
         router.push("/dashboard"); 
       } else {
         alert(data.message || "Invalid credentials");
-        console.error(data);
       }
     } catch (error) {
       console.error("Error during login:", error);

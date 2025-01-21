@@ -19,7 +19,7 @@ const SettingsPage = () => {
   const handleBackToDashboard = () => {
     router.push("/dashboard");
   };
-  
+
   const fetchUserData = () => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -41,8 +41,6 @@ const SettingsPage = () => {
     }
   };
 
-  console.log(userData);
-  
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -62,7 +60,6 @@ const SettingsPage = () => {
       alert("No changes to save.");
       return;
     }
-  
 
     fetch("https://fairshare-backend-8kqh.onrender.com/auth/update", {
       method: "PUT",
@@ -88,14 +85,6 @@ const SettingsPage = () => {
         alert("Failed to save changes. Please try again.");
       });
   };
-  
-  console.log(
-    "name" , newName,
-    "password" , newPassword,
-    "image" , newAvatar,
-    "phone" , newPassword
-  );
-  
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -109,6 +98,33 @@ const SettingsPage = () => {
     }
   };
 
+  const handleDeleteAccount = () => {
+    const confirmation = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    );
+    if (confirmation) {
+      const token = localStorage.getItem("token");
+      fetch("https://fairshare-backend-8kqh.onrender.com/auth/delete", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to delete account.");
+          }
+          localStorage.removeItem("token");
+          router.push("/");
+          alert("Your account has been deleted.");
+        })
+        .catch((error) => {
+          console.error("Error deleting account:", error);
+          alert("Failed to delete account. Please try again.");
+        });
+    }
+  };
+
   if (!userData) {
     return <div>Loading...</div>;
   }
@@ -116,117 +132,132 @@ const SettingsPage = () => {
   return (
     <div>
       <InternalNavbar />
-      <div className="container mx-auto px-4 py-6">
-        <h1 className="text-2xl font-semibold">Your Account</h1>
-        <div className="mt-6">
-          <div className="flex items-center gap-4">
-            <img
-              src={avatarPreview || userData.image || "/img/heart.png"}
-              alt="User Avatar"
-              className="w-24 h-24 rounded-full object-cover"
-            />
-            <div>
-              {isEditing && (
-                <>
-                  <input
-                    type="file"
-                    id="avatar"
-                    name="avatar"
-                    accept="image/*"
-                    onChange={handleAvatarChange}
-                    className="hidden"
-                  />
-                  <label
-                    htmlFor="avatar"
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
-                  >
-                    Change your avatar
-                  </label>
-                </>
-              )}
-            </div>
-          </div>
-
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="container mx-auto px-4 py-6 max-w-xl bg-white rounded-lg shadow-md">
+          <h1 className="text-2xl font-semibold text-center">Your Account</h1>
           <div className="mt-6">
-            <div className="flex justify-between items-center">
-              <label className="font-medium">Your name</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
-                />
-              ) : (
-                <span>{userData.name}</span>
-              )}
+            <div className="flex items-center gap-4 justify-center">
+              <img
+                src={avatarPreview || userData.image || "/img/heart.png"}
+                alt="User Avatar"
+                className="w-24 h-24 rounded-full object-cover"
+              />
+              <div>
+                {isEditing && (
+                  <>
+                    <input
+                      type="file"
+                      id="avatar"
+                      name="avatar"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="avatar"
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+                    >
+                      Change Profile Picture
+                    </label>
+                  </>
+                )}
+              </div>
             </div>
 
-            <div className="flex justify-between items-center mt-4">
-              <label className="font-medium">Your email address</label>
-                <span>{userData.email}</span>
-            </div>
-
-            <div className="flex justify-between items-center mt-4">
-              <label className="font-medium">Your phone number</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={newPhone}
-                  onChange={(e) => setNewPhone(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
-                />
-              ) : (
-                <span>{userData.phone || "None"}</span>
-              )}
-            </div>
-
-            <div className="flex justify-between items-center mt-4">
-              <label className="font-medium">Your password</label>
-              {isEditing ? (
-                <div className="flex items-center gap-2">
+            <div className="mt-6">
+              <div className="flex justify-between items-center">
+                <label className="font-medium">Name</label>
+                {isEditing ? (
                   <input
-                    type={showPassword ? "text" : "password"}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    type="text"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
                     className="px-4 py-2 border border-gray-300 rounded-lg"
                   />
-                  <button
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="text-blue-600 hover:text-blue-700"
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-                </div>
-              ) : (
-                <span>••••••••••</span>
-              )}
-            </div>
+                ) : (
+                  <span>{userData.name}</span>
+                )}
+              </div>
 
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={handleEditToggle}
-                className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg"
-              >
-                {isEditing ? "Cancel" : "Edit"}
-              </button>
-              {isEditing && (
+              <div className="flex justify-between items-center mt-4">
+                <label className="font-medium">Email Address</label>
+                <input
+                  type="text"
+                  value={userData.email}
+                  disabled
+                  className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed"
+                />
+              </div>
+
+              <div className="flex justify-between items-center mt-4">
+                <label className="font-medium">Phone Number</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={newPhone}
+                    onChange={(e) => setNewPhone(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg"
+                  />
+                ) : (
+                  <span>{userData.phone || "None"}</span>
+                )}
+              </div>
+
+              <div className="flex justify-between items-center mt-4">
+                <label className="font-medium">Password</label>
+                {isEditing ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="px-1 py-1 border border-gray-300 rounded-lg"
+                    />
+                    <button
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-blue-600 hover:text-blue-700"
+                    >
+                      {showPassword ? "🫣" : "👀"}
+                    </button>
+                  </div>
+                ) : (
+                  <span>••••••••••</span>
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-end">
                 <button
-                  onClick={handleSaveChanges}
-                  className="ml-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+                  onClick={handleEditToggle}
+                  className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg"
                 >
-                  Save Changes
+                  {isEditing ? "Cancel" : "Edit"}
                 </button>
-              )}
+                {isEditing && (
+                  <button
+                    onClick={handleSaveChanges}
+                    className="ml-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+                  >
+                    Save Changes
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="mt-6">
+            <div className="flex justify-between">
+              <button
+                onClick={handleBackToDashboard}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+              >
+                Back to Dashboard
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg"
+              >
+                Delete Account
+              </button>
             </div>
           </div>
-          <div className="mt-6 flex justify-start">
-            <button
-              onClick={handleBackToDashboard}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-            >
-              Back to Dashboard
-            </button>
           </div>
         </div>
       </div>
