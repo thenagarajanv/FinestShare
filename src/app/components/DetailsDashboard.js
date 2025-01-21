@@ -28,7 +28,7 @@ const DetailsDashboard = ({ entity, type }) => {
       category: editExpenseData.category,
     };
   
-    fetch(`http://192.168.0.127:8080/expense/update/${expense.expenseID}`, {
+    fetch(`http://192.168.0.127:8080/expense/${expense.expenseID}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -167,7 +167,7 @@ const DetailsDashboard = ({ entity, type }) => {
       amount: settleModal.amount,
     };
   
-    fetch("http://192.168.0.127:8080/expense/settle", {
+    fetch("https://fairshare-backend-8kqh.onrender.com/expense/settle", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
