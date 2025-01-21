@@ -22,7 +22,7 @@ import { usePathname, useRouter } from "next/navigation";const EditGroup = () =>
       }
       setLoading(true);
       try {
-        const response = await fetch(`https://fairshare-backend-8kqh.onrender.com/group/${groupID}/details`, {
+        const response = await fetch(`https://finestshare-backend.onrender.com/group/${groupID}/details`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -83,7 +83,7 @@ import { usePathname, useRouter } from "next/navigation";const EditGroup = () =>
     console.log(groupID);
     
     try {
-      const response = await fetch(`https://fairshare-backend-8kqh.onrender.com/group/${groupID}/edit`, {
+      const response = await fetch(`https://finestshare-backend.onrender.com/group/${groupID}/edit`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

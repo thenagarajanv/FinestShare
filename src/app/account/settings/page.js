@@ -23,7 +23,7 @@ const SettingsPage = () => {
   const fetchUserData = () => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("https://fairshare-backend-8kqh.onrender.com/auth/me", {
+      fetch("https://finestshare-backend.onrender.com/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,7 +61,7 @@ const SettingsPage = () => {
       return;
     }
 
-    fetch("https://fairshare-backend-8kqh.onrender.com/auth/update", {
+    fetch("https://finestshare-backend.onrender.com/auth/update", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -104,7 +104,7 @@ const SettingsPage = () => {
     );
     if (confirmation) {
       const token = localStorage.getItem("token");
-      fetch("https://fairshare-backend-8kqh.onrender.com/auth/delete", {
+      fetch("https://finestshare-backend.onrender.com/auth/delete", {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

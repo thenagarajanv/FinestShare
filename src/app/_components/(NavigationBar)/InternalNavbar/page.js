@@ -14,7 +14,7 @@ const InternalNavbar = () => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
-      fetch("https://fairshare-backend-8kqh.onrender.com/auth/me", {
+      fetch("https://finestshare-backend.onrender.com/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -17,7 +17,7 @@ const BasicAuthSignup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://fairshare-backend-8kqh.onrender.com/auth/signup', {
+      const response = await fetch('https://finestshare-backend.onrender.com/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

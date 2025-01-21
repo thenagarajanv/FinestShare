@@ -9,7 +9,7 @@ const RecentActivitiesPage = () => {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("https://fairshare-backend-8kqh.onrender.com/auth/me", {
+      fetch("https://finestshare-backend.onrender.com/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -17,7 +17,7 @@ const RecentActivitiesPage = () => {
         .then((response) => response.json())
         .then((data) => {
           setUserData(data.user);
-          fetch("https://fairshare-backend-8kqh.onrender.com/activities", {
+          fetch("https://finestshare-backend.onrender.com/activities", {
             headers: {
               Authorization: `Bearer ${token}`,
             },

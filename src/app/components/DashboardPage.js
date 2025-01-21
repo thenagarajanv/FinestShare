@@ -32,7 +32,7 @@ const DashboardPage = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("https://fairshare-backend-8kqh.onrender.com/auth/me", {
+      fetch("https://finestshare-backend.onrender.com/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -59,7 +59,7 @@ const DashboardPage = () => {
         .catch((error) => console.error("Error fetching user data:", error));
 
       // Fetch balance summary
-      fetch("https://fairshare-backend-8kqh.onrender.com/expense/balances-summary/", {
+      fetch("https://finestshare-backend.onrender.com/expense/balances-summary/", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -112,7 +112,7 @@ const DashboardPage = () => {
     };
 
     try {
-      const response = await fetch("https://fairshare-backend-8kqh.onrender.com/settle", {
+      const response = await fetch("https://finestshare-backend.onrender.com/settle", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

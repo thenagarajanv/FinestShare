@@ -25,7 +25,7 @@ const Layout = ({ children }) => {
     const fetchGroups = async () => {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "https://fairshare-backend-8kqh.onrender.com/group/user/groups",
+        "https://finestshare-backend.onrender.com/group/user/groups",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -36,10 +36,12 @@ const Layout = ({ children }) => {
       setGroups(data.groups || []);
     };
 
+    console.log(groups);
+    
     const fetchFriends = async () => {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `https://fairshare-backend-8kqh.onrender.com/friend/`,
+        `https://finestshare-backend.onrender.com/friend/`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -95,7 +97,7 @@ const Layout = ({ children }) => {
   
     try {
       const response = await fetch(
-        `https://fairshare-backend-8kqh.onrender.com/friend/remove/${userId}`,
+        `https://finestshare-backend.onrender.com/friend/remove/${userId}`,
         {
           method: "DELETE",
           headers: {
@@ -109,7 +111,7 @@ const Layout = ({ children }) => {
         setFriends(updatedFriends);
   
         const refreshedResponse = await fetch(
-          `https://fairshare-backend-8kqh.onrender.com/friend/`,
+          `https://finestshare-backend.onrender.com/friend/`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -56,7 +56,7 @@ const ExpenseComponent = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch('https://fairshare-backend-8kqh.onrender.com/auth/me', {
+        const response = await fetch('https://finestshare-backend.onrender.com/auth/me', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`, 
@@ -100,7 +100,7 @@ const ExpenseComponent = () => {
     };
     
   try {
-    const response = await fetch('https://fairshare-backend-8kqh.onrender.com/expense/add', {
+    const response = await fetch('https://finestshare-backend.onrender.com/expense/add', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -386,7 +386,7 @@ const ExpenseComponent = () => {
   useEffect(() => {
     if (groupID) {
       fetch(
-        `https://fairshare-backend-8kqh.onrender.com/group/${groupID}/details`,
+        `https://finestshare-backend.onrender.com/group/${groupID}/details`,
         {
           method: "GET",
           headers: {
