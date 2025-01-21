@@ -9,7 +9,59 @@ const DetailsDashboard = ({ entity, type }) => {
   const [settleModal, setSettleModal] = useState({ visible: false, friendID: null, amount: 0 });
   const router = useRouter();
   const token = localStorage.getItem("token");
-
+  const [newGroupName, setNewGroupName] = useState(entity.groupName || "");
+  const [newCategory, setNewCategory] = useState(entity.category || "");
+  
+  const handleEditGroup = () => {
+    const updatedGroupData = {
+      groupID: entity.groupID,
+      groupName: newGroupName,
+      category: newCategory,
+    };
+  
+    fetch(`https://fairshare-backend-8kqh.onrender.com/group/update/${entity.groupID}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updatedGroupData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          alert(data.message);
+        } else {
+          alert("Group updated successfully.");
+        }
+        setIsEditing(false);
+        setNewGroupName(data.groupName);
+        setNewCategory(data.category);
+      })
+      .catch(() => alert("Failed to update group."));
+  };
+  const handleDeleteGroup = () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this group?");
+    if (confirmDelete) {
+      fetch(`https://fairshare-backend-8kqh.onrender.com/group/delete/${entity.groupID}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message) {
+            alert(data.message);
+          } else {
+            alert("Group deleted successfully.");
+            router.push("/"); // Redirect to home after deletion
+          }
+        })
+        .catch(() => alert("Failed to delete group."));
+    }
+  };
+    
 
   useEffect(() => {
     const fetchUserID = async () => {
@@ -126,23 +178,60 @@ const DetailsDashboard = ({ entity, type }) => {
       .catch(() => alert("Failed to settle payment."));
   };
   
-
   return (
     <div className="bg-slate-200 flex flex-col gap-4 p-6 rounded-md">
       <div className="flex justify-between items-center">
         <h1 className="text-black font-extrabold text-2xl">
           {type === "group" ? entity.groupName : `Friend: ${entity.name}`} Dashboard
         </h1>
-        {type !== "friend" && (
-          <button
-            className="block text-white bg-orange-500 rounded-lg p-3"
-            onClick={() => router.push(`/add-expense/${entity.groupID || entity.userID}`)}
-          >
-            Add an Expense
-          </button>
+        {type !== "friend" && currentUserID === entity.createdBy && (
+          <div className="flex gap-4">
+            <button
+              className="bg-blue-500 text-white p-2 rounded-lg"
+              onClick={() => setIsEditing(true)} // Show edit mode
+            >
+              Edit Group
+            </button>
+            <button
+              className="bg-red-500 text-white p-2 rounded-lg"
+              onClick={handleDeleteGroup}
+            >
+              Delete Group
+            </button>
+          </div>
         )}
       </div>
-
+  
+      {isEditing && (
+        <div className="mt-6">
+          <h2 className="font-bold">Edit Group</h2>
+          <input
+            type="text"
+            value={newGroupName}
+            onChange={(e) => setNewGroupName(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 mb-4 w-full"
+            placeholder="Group Name"
+          />
+          <select
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+            className="border border-gray-300 rounded-md p-2 mb-4 w-full"
+          >
+            <option value="Home">Home</option>
+            <option value="Trip">Trip</option>
+            <option value="Office">Office</option>
+            <option value="Couple">Couple</option>
+            <option value="Others">Others</option>
+          </select>
+          <button
+            className="bg-green-500 text-white p-2 rounded-lg"
+            onClick={handleEditGroup}
+          >
+            Save Changes
+          </button>
+        </div>
+      )}
+  
       {settleModal.visible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-md">
@@ -171,7 +260,7 @@ const DetailsDashboard = ({ entity, type }) => {
           </div>
         </div>
       )}
-
+  
       {type !== "friend" && (
         <div className="mt-6">
           <h2 className="text-xl font-bold">{type === "group" ? "Group" : "Friend"} Expenses</h2>
@@ -186,7 +275,7 @@ const DetailsDashboard = ({ entity, type }) => {
                 }
                 const userSplit = expense.splits?.find((split) => split.userID === currentUserID);
                 const userAmount = userSplit ? userSplit.amount : 0;
-
+  
                 return (
                   <li key={expense.expenseID} className="bg-white p-4 rounded-md shadow-md">
                     <h3 className="text-lg font-semibold">{expense.description || "Untitled Expense"}</h3>
@@ -213,7 +302,7 @@ const DetailsDashboard = ({ entity, type }) => {
           )}
         </div>
       )}
-
+  
       {balances && type === "friend" && (
         <div className="mt-6">
           <h2 className="text-xl font-bold">Balances</h2>
@@ -247,6 +336,6 @@ const DetailsDashboard = ({ entity, type }) => {
       )}
     </div>
   );
-};
+}
 
 export default DetailsDashboard;
