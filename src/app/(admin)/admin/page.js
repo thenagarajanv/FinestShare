@@ -25,9 +25,12 @@ const AdminPage = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loadingFeedback, setLoadingFeedback] = useState(true);
   const [analyticsData, setAnalyticsData] = useState(null);
-
+  const [token, setToken] = useState(null);
   
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken); 
+  }, []); 
 
   useEffect(() => {
 
