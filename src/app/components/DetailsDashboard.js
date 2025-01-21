@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 const DetailsDashboard = ({ entity, type }) => {
   const [expenses, setExpenses] = useState([]);
+  const [balances, setBalances] = useState(null);
   const [error, setError] = useState(null);
   const [currentUserID, setCurrentUserID] = useState(null);
   const [settleModal, setSettleModal] = useState({ visible: false, friendID: null, amount: 0 });
@@ -30,50 +31,63 @@ const DetailsDashboard = ({ entity, type }) => {
   }, [token]);
 
   useEffect(() => {
-    // Fetch expenses
-    const fetchExpenses = () => {
-      if (type === "group" && entity?.groupID) {
-        fetch(`https://fairshare-backend-8kqh.onrender.com/expense/group/${entity.groupID}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => Array.isArray(data) ? setExpenses(data) : setError("Invalid expenses format"))
-          .catch((err) => setError("Failed to fetch expenses."));
-      } else if (type === "friend" && entity?.userID) {
-        fetch(`https://fairshare-backend-8kqh.onrender.com/expense/user/${entity.userID}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => Array.isArray(data) ? setExpenses(data) : setError("Invalid expenses format"))
-          .catch((err) => setError("Failed to fetch expenses."));
+    const fetchExpenses = async () => {
+      if (type !== "friend") {
+        const url =
+          type === "group"
+            ? `https://fairshare-backend-8kqh.onrender.com/expense/group/${entity.groupID}`
+            : `https://fairshare-backend-8kqh.onrender.com/expense/user/${entity.userID}`;
+
+        try {
+          const response = await fetch(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (!response.ok) throw new Error("Failed to fetch expenses");
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            setExpenses(data);
+          } else {
+            setError("Invalid expenses format");
+          }
+        } catch (err) {
+          console.error("Error fetching expenses:", err);
+          setError("Failed to fetch expenses.");
+        }
       }
     };
-    fetchExpenses();
+
+    if (entity?.userID || entity?.groupID) fetchExpenses();
   }, [entity, type, token]);
 
-  const calculateAmount = () => {
-    return expenses.reduce((total, expense) => {
-      if (expense.paidBy === currentUserID) {
-        return total - expense.amount;
-      } else {
-        return total + expense.amount;
+  useEffect(() => {
+    const fetchBalances = async () => {
+      try {
+        const friendID = entity.userID || entity.groupID;
+        const response = await fetch(`https://fairshare-backend-8kqh.onrender.com/expense/balances/${friendID}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("Failed to fetch balances");
+        const data = await response.json();
+        setBalances(data);
+      } catch (err) {
+        console.error("Error fetching balances:", err);
+        setError("Failed to fetch balances.");
       }
-    }, 0);
-  };
+    };
 
-  const handleSettleUp = () => {
-    const amount = calculateAmount();
-    if (amount !== 0) {
-      setSettleModal({
-        visible: true,
-        friendID: entity.userID || entity.groupID,
-        amount: Math.abs(amount),
-      });
-    }
+    if (entity?.userID || entity?.groupID) fetchBalances();
+  }, [entity, token]);
+
+  const handleSettleUp = (expense, amount) => {
+    setSettleModal({
+      visible: true,
+      friendID: expense.groupID || expense.paidBy,
+      amount,
+    });
   };
 
   const handlePayment = (method) => {
@@ -94,17 +108,8 @@ const DetailsDashboard = ({ entity, type }) => {
         alert("Payment settled successfully.");
         setSettleModal({ visible: false, friendID: null, amount: 0 });
       })
-      .catch((err) => {
-        console.error("Error settling payment:", err);
-        alert("Failed to settle payment.");
-      });
+      .catch(() => alert("Failed to settle payment."));
   };
-
-  if (!entity) {
-    return <p>No entity selected.</p>;
-  }
-
-  const amountOwed = calculateAmount();
 
   return (
     <div className="bg-slate-200 flex flex-col gap-4 p-6 rounded-md">
@@ -112,28 +117,21 @@ const DetailsDashboard = ({ entity, type }) => {
         <h1 className="text-black font-extrabold text-2xl">
           {type === "group" ? entity.groupName : `Friend: ${entity.name}`} Dashboard
         </h1>
-        <div className="flex gap-4">
+        {type !== "friend" && (
           <button
             className="block text-white bg-orange-500 rounded-lg p-3"
             onClick={() => router.push(`/add-expense/${entity.groupID || entity.userID}`)}
           >
             Add an Expense
           </button>
-          {amountOwed !== 0 && (
-            <button
-              className="bg-blue-500 rounded-lg p-3 text-white"
-              onClick={handleSettleUp}
-            >
-              Settle Up
-            </button>
-          )}
-        </div>
+        )}
       </div>
+      
       {settleModal.visible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-md">
             <h2 className="text-xl font-bold">Settle Amount</h2>
-            <p>You owe {settleModal.amount} to this {type}.</p>
+            <p>You owe {settleModal.amount} for this trip.</p>
             <div className="flex gap-4 mt-4">
               <button
                 className="bg-green-500 hover:bg-green-700 rounded-lg p-3 text-white"
@@ -157,22 +155,76 @@ const DetailsDashboard = ({ entity, type }) => {
           </div>
         </div>
       )}
-      <div className="mt-6">
-        <h2 className="text-xl font-bold">{type === "group" ? "Group" : "Friend"} Expenses</h2>
-        {error ? (
-          <p className="text-red-500 mt-4">{error}</p>
-        ) : (
-          <ul className="space-y-4 mt-4">
-            {expenses.map((expense) => (
-              <li key={expense.expenseID} className="bg-white p-4 rounded-md shadow-md">
-                <h3 className="text-lg font-semibold">{expense.description || "Untitled Expense"}</h3>
-                <p className="text-sm text-gray-500">{new Date(expense.date).toLocaleString()}</p>
-                <p className="text-sm text-gray-700">Category: {expense.category || "Uncategorized"}</p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+
+      {type !== "friend" && (
+        <div className="mt-6">
+          <h2 className="text-xl font-bold">{type === "group" ? "Group" : "Friend"} Expenses</h2>
+          {error ? (
+            <p className="text-red-500 mt-4">{error}</p>
+          ) : (
+            <ul className="space-y-4 mt-4">
+              {expenses.map((expense) => {
+                const userSplit = expense.splits.find((split) => split.userID === currentUserID);
+                const userAmount = userSplit ? userSplit.amount : 0;
+
+                return (
+                  <li key={expense.expenseID} className="bg-white p-4 rounded-md shadow-md">
+                    <h3 className="text-lg font-semibold">{expense.description || "Untitled Expense"}</h3>
+                    <p className="text-sm text-gray-500">{new Date(expense.date).toLocaleString()}</p>
+                    <p className="text-sm text-gray-700">Category: {expense.category || "Uncategorized"}</p>
+                    <p className="text-sm text-gray-700">Total Amount: {expense.amount || "0.00"}</p>
+                    {userSplit && (
+                      <>
+                        <p className="text-sm text-gray-700 font-bold">
+                          Your Share: {userAmount || "0.00"}
+                        </p>
+                        <button
+                          className="bg-blue-500 hover:bg-blue-700 text-white rounded-lg p-2 mt-2"
+                          onClick={() => handleSettleUp(expense, userAmount)}
+                        >
+                          Settle Up
+                        </button>
+                      </>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {balances && type === "friend" && (
+        <div className="mt-6">
+          <h2 className="text-xl font-bold">Balances</h2>
+          {balances.iOwe?.length > 0 || balances.theyOweMe?.length > 0 ? (
+            <>
+              {balances.iOwe?.length > 0 && (
+                <div>
+                  <h3 className="font-bold">I Owe</h3>
+                  {balances.iOwe.map((item) => (
+                    <p key={item.friend.userID}>
+                      {item.friend.name}: {item.amountOwed}
+                    </p>
+                  ))}
+                </div>
+              )}
+              {balances.theyOweMe?.length > 0 && (
+                <div className="mt-4">
+                  <h3 className="font-bold">They Owe Me</h3>
+                  {balances.theyOweMe.map((item) => (
+                    <p key={item.friend.userID}>
+                      {item.friend.name}: {item.amountOwed}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <p>No transactions between you and this user.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

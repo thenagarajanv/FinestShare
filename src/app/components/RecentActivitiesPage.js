@@ -17,8 +17,6 @@ const RecentActivitiesPage = () => {
         .then((response) => response.json())
         .then((data) => {
           setUserData(data.user);
-
-          // Fetch activities using the new API
           fetch("https://fairshare-backend-8kqh.onrender.com/activities", {
             headers: {
               Authorization: `Bearer ${token}`,
