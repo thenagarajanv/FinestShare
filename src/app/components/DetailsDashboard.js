@@ -9,38 +9,59 @@ const DetailsDashboard = ({ entity, type }) => {
   const [settleModal, setSettleModal] = useState({ visible: false, friendID: null, amount: 0 });
   const router = useRouter();
   const token = localStorage.getItem("token");
-const [newGroupName, setNewGroupName] = useState(entity.groupName || "");
-const [newCategory, setNewCategory] = useState(entity.category || "");
-
-const handleEditGroup = () => {
-  const updatedGroupData = {
-    groupID: entity.groupID,
-    groupName: newGroupName,
-    category: newCategory,
-  };
-
-  fetch(`https://fairshare-backend-8kqh.onrender.com/group/update/${entity.groupID}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(updatedGroupData),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.message) {
-        alert(data.message);
-      } else {
-        alert("Group updated successfully.");
-      }
-      setIsEditing(false);
-      setNewGroupName(data.groupName);
-      setNewCategory(data.category);
+  const [newGroupName, setNewGroupName] = useState(entity.groupName || "");
+  const [newCategory, setNewCategory] = useState(entity.category || "");
+  
+  const handleEditGroup = () => {
+    const updatedGroupData = {
+      groupID: entity.groupID,
+      groupName: newGroupName,
+      category: newCategory,
+    };
+  
+    fetch(`https://fairshare-backend-8kqh.onrender.com/group/update/${entity.groupID}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updatedGroupData),
     })
-    .catch(() => alert("Failed to update group."));
-};
-
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          alert(data.message);
+        } else {
+          alert("Group updated successfully.");
+        }
+        setIsEditing(false);
+        setNewGroupName(data.groupName);
+        setNewCategory(data.category);
+      })
+      .catch(() => alert("Failed to update group."));
+  };
+  const handleDeleteGroup = () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this group?");
+    if (confirmDelete) {
+      fetch(`https://fairshare-backend-8kqh.onrender.com/group/delete/${entity.groupID}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message) {
+            alert(data.message);
+          } else {
+            alert("Group deleted successfully.");
+            router.push("/"); // Redirect to home after deletion
+          }
+        })
+        .catch(() => alert("Failed to delete group."));
+    }
+  };
+    
 
   useEffect(() => {
     const fetchUserID = async () => {
