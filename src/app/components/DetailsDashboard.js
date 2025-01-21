@@ -28,7 +28,7 @@ const DetailsDashboard = ({ entity, type }) => {
       category: editExpenseData.category,
     };
   
-    fetch(`http://192.168.0.127:8080/expense/${expense.expenseID}`, {
+    fetch(`https://fairshare-backend-8kqh.onrender.com/expense/${expense.expenseID}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const DetailsDashboard = ({ entity, type }) => {
   const handleDeleteExpense = (expense) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this expense?");
     if (confirmDelete) {
-      fetch(`http://192.168.0.127:8080/expense/${expense.expenseID}`, {
+      fetch(`https://fairshare-backend-8kqh.onrender.com/expense/${expense.expenseID}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
