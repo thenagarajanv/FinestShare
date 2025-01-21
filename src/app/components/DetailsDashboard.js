@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Razorpay from "razorpay";
 
 const DetailsDashboard = ({ entity, type }) => {
   const [expenses, setExpenses] = useState([]);
@@ -13,7 +14,10 @@ const DetailsDashboard = ({ entity, type }) => {
   const [newCategory, setNewCategory] = useState(entity.category || "");
   const [isEditing, setIsEditing] = useState(null);
   const [editExpenseData, setEditExpenseData] = useState({ description: "", category: "" });
-
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userPhone, setUserPhone] = useState("");
+ 
   const handleEditExpense = (expense) => {
     setIsEditing(expense.expenseID);
     setEditExpenseData({
@@ -71,9 +75,22 @@ const DetailsDashboard = ({ entity, type }) => {
         .catch(() => alert("Failed to delete expense."));
     }
   };
-  
 
   useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+  
+    script.onload = () => console.log("Razorpay script loaded successfully.");
+  
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+  
+
+  useEffect(() => { 
     const fetchUserID = async () => {
       try {
         const response = await fetch("https://fairshare-backend-8kqh.onrender.com/auth/me", {
@@ -81,17 +98,22 @@ const DetailsDashboard = ({ entity, type }) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (!response.ok) throw new Error("Failed to fetch user ID");
+        if (!response.ok) throw new Error("Failed to fetch user details");
         const data = await response.json();
         setCurrentUserID(data.user.userID);
-      } catch (err) {
-        console.error("Error fetching user ID:", err);
-        setError("Failed to fetch user ID.");
-      }
+        setUserName(data.user.name);
+      setUserEmail(data.user.email);
+      setUserPhone(data.user.phone);
+    } catch (err) {
+      console.error("Error fetching user details:", err);
+      setError("Failed to fetch user details.");
+    }
     };
-    if (token) fetchUserID();
+  if (token) fetchUserID();
   }, [token]);
 
+  console.log(userName +" "+ userPhone+" "+userEmail);
+  
   useEffect(() => {
     const fetchExpenses = async () => {
       if (type !== "friend") {
@@ -162,30 +184,97 @@ const DetailsDashboard = ({ entity, type }) => {
 
   const handlePayment = (method) => {
     const requestBody = {
-      friendID: settleModal.friendID || null, 
-      groupID: settleModal.groupID || null,   
+      friendID: settleModal.friendID || null,
+      groupID: settleModal.groupID || null,
       amount: settleModal.amount,
     };
-  
-    fetch("https://fairshare-backend-8kqh.onrender.com/expense/settle", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message) {
-          alert(data.message);
-        } else {
-          alert("Payment settled successfully.");
-        }
-        setSettleModal({ visible: false, friendID: null, amount: 0 });
+
+    if (method === "cash") {
+      fetch("https://fairshare-backend-8kqh.onrender.com/expense/settle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(requestBody),
       })
-      .catch(() => alert("Failed to settle payment."));
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+          }
+          return response.json(); 
+        })
+        .then((data) => {
+          console.log("Payment settled data:", data); 
+    
+          if (data.message) {
+            alert(data.message);
+          } else {
+            alert("Payment settled successfully.");
+          }
+          setSettleModal({ visible: false, friendID: null, amount: 0 });
+        })
+        .catch((error) => {
+          console.error("Error settling payment:", error); 
+          alert("Failed to settle payment.");
+        });
+    }
+    else if (method === "razorpay") {
+      console.log("Razorpay started..");
+  
+      if (typeof Razorpay === "undefined") {
+        alert("Razorpay SDK not loaded. Please try again.");
+        return;
+      }
+  
+      const options = {
+        key: "rzp_test_nTbKdtgjeOQLhc",
+        amount: settleModal.amount * 100, 
+        currency: "INR",
+        name: "FairShare",
+        description: "Payment Settlement",
+        handler: async (response) => {
+          try {
+            console.log(settleModal.friendID, settleModal.groupID, settleModal.amount);
+            const backendResponse = await fetch("https://fairshare-backend-8kqh.onrender.com/expense/settle", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                friendID: settleModal.friendID,
+                groupID: settleModal.groupID,
+                amount: settleModal.amount,
+              }),
+            });
+            const backendData = await backendResponse.json();
+            if (backendData.message) {
+              alert(backendData.message);
+            } else {
+              alert("Payment settled successfully.");
+            }
+            setSettleModal({ visible: false, friendID: null, amount: 0 });
+          } catch (error) {
+            console.error("Payment error:", error);
+            alert("An error occurred. Please try again.");
+          }
+        },
+        prefill: {
+          name: userName || "Your Name",
+          email: userEmail || "user@example.com",
+          contact: userPhone || "0000000000",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+  
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    }
   };
+  
     
   return (
     <div className="bg-slate-200 flex flex-col gap-4 p-6 rounded-md">
