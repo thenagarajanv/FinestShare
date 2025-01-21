@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 async function auth(router) {
   try {
     window.location.href = "https://finestshare-backend.onrender.com/auth/google";
-    useParams
   } catch (error) {
     console.error("Error during authentication:", error);
     alert("An error occurred during Google authentication.");
@@ -36,9 +35,28 @@ const BasicAuthLogin = () => {
 
         document.cookie = `token=${data.token}; path=/; secure; HttpOnly; max-age=86400`; 
 
-        alert("Logged in successfully");
-        console.log(data);
-        router.push("/dashboard"); 
+        const roleResponse = await fetch("https://finestshare-backend.onrender.com/auth/me", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        });
+
+        if (roleResponse.ok) {
+          const roleData = await roleResponse.json();
+          const role = roleData.user.role.toLowerCase();
+
+          if (role === "admin") {
+            alert("Logged in as Admin");
+            router.push("/admin");
+          } else {
+            alert("Logged in successfully");
+            router.push("/dashboard");
+          }
+        } else {
+          console.error("Failed to fetch user role:", roleResponse.statusText);
+          alert("Error determining user role.");
+        }
       } else {
         alert(data.message || "Invalid credentials");
       }

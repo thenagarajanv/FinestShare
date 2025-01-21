@@ -58,7 +58,6 @@ const DashboardPage = () => {
         })
         .catch((error) => console.error("Error fetching user data:", error));
 
-      // Fetch balance summary
       fetch("https://finestshare-backend.onrender.com/expense/balances-summary/", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -139,15 +138,14 @@ const DashboardPage = () => {
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
       <div className="mt-6">
-        <div className="flex gap-4 flex justify-end items-center">
+        {/* <div className="flex gap-4 flex justify-end items-center">
           <button
             className="bg-blue-500 rounded-lg p-3 text-white"
             onClick={handleSettleUp}
           >
             Settle Up All Payemet
           </button>
-        </div>
-
+        </div> */}
         <div className="mt-6">
           <h2 className="font-semibold">Expenses by Group</h2>
           <Bar data={barChartData} />

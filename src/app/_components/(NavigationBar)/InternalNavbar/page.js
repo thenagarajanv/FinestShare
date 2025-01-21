@@ -8,6 +8,7 @@ const InternalNavbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
   const [profileImage, setProfileImage] = useState("");
+  const [userRole, setUserRole] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -22,7 +23,8 @@ const InternalNavbar = () => {
         .then((response) => response.json())
         .then((data) => {
           setUserName(data.user.name);
-          setProfileImage(data.user.image); 
+          setProfileImage(data.user.image);
+          setUserRole(data.user.role); // Set user role
         })
         .catch((error) => console.error("Error fetching user data:", error));
     } else {
@@ -50,7 +52,7 @@ const InternalNavbar = () => {
             <img
               src="/img/Logo.png"
               className="h-[50px] cursor-pointer"
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/dashboard")}
               alt="Logo"
             />
           </div>
@@ -63,7 +65,7 @@ const InternalNavbar = () => {
                   className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-md"
                 >
                   <img
-                    src={profileImage || "/img/default-profile.png"} // Fallback to a default image
+                    src={profileImage || "/img/heart.png"} 
                     alt="Profile"
                     className="h-8 w-8 rounded-full object-cover"
                   />
@@ -71,11 +73,25 @@ const InternalNavbar = () => {
                 </button>
                 {isMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg">
+                    {userRole.toLowerCase() === "admin" && (
+                      <a
+                        href="/admin"
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >
+                        Admin Dashboard
+                      </a>
+                    )}
+                    <a
+                      href="/dashboard"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      Dashboard
+                    </a>
                     <a
                       href="/account/settings"
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                     >
-                      Your Account
+                      Settings
                     </a>
                     <button
                       onClick={handleLogout}
@@ -111,12 +127,34 @@ const InternalNavbar = () => {
               onClick={toggleMenu}
             >
               {isMenuOpen ? (
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               ) : (
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                <svg
+                  className="h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               )}
             </button>
@@ -135,9 +173,17 @@ const InternalNavbar = () => {
                 >
                   Your Account
                 </a>
+                {userRole.toLowerCase() === "admin" && (
+                  <a
+                    href="/admin"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Admin Dashboard
+                  </a>
+                )}
                 <button
                   onClick={handleLogout}
-                  className="block w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium shadow-md text-left"
+                  className="block w-full px-2 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium shadow-md text-left"
                 >
                   Log Out
                 </button>

@@ -79,53 +79,135 @@ const ExpenseComponent = () => {
     fetchUserData();
   }, []);
 
-  const submitExpense = async () => {
-    if (!userID) {
-      console.error('User ID is not available yet.');
-      return; 
-    }
+//   const submitExpense = async () => {
+//     if (!userID) {
+//       console.error('User ID is not available yet.');
+//       return; 
+//     }
   
-    const expenseData = {
-      amount: parseFloat(amount),
-      description: description.trim(), 
-      paidBy: parseInt(userID), 
-      groupID: parseInt(groupID),
-      type: "group", 
-      category: category.trim(), 
-      image: "dinner.jpg", 
-      splits: Object.keys(splitAmounts).map((userID) => ({
-        userID: parseInt(userID), 
-        amount: parseFloat(splitAmounts[userID]), 
-      })),
-    };
+//     const expenseData = {
+//       amount: parseFloat(amount),
+//       description: description.trim(), 
+//       paidBy: parseInt(userID), 
+//       groupID: parseInt(groupID),
+//       type: "group", 
+//       category: category.trim(), 
+//       image: "dinner.jpg", 
+//       splits: Object.keys(splitAmounts).map((userID) => ({
+//         userID: parseInt(userID), 
+//         amount: parseFloat(splitAmounts[userID]), 
+//       })),
+//     };
     
-  try {
-    const response = await fetch('https://finestshare-backend.onrender.com/expense/add', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(expenseData),
-    });
+//   try {
+//     const response = await fetch('https://finestshare-backend.onrender.com/expense/add', {
+//       method: 'POST',
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(expenseData),
+//     });
 
-    console.log('Request payload:', expenseData);
+//     console.log('Request payload:', expenseData);
+
+//     const data = await response.json();
+
+//     if (response.ok) {
+//       console.log('Expense created successfully:', data);
+//       alert('Expense submitted successfully!');
+//     } else {
+//       console.error('Failed to create expense.', {
+//         status: response.status,
+//         responseData: data,
+//       });
+//       alert(`Failed to submit expense. Error: ${data.message || response.statusText}`);
+//     }
+//   } catch (error) {
+//     console.error('Error submitting expense:', error);
+//     alert('An unexpected error occurred while submitting the expense. Please try again.');
+//   }
+// };
+
+const validateForm = () => {
+  if (!amount || parseFloat(amount) <= 0) {
+    alert("Please enter a valid amount.");
+    return false;
+  }
+  if (!description.trim()) {
+    alert("Please provide a description.");
+    return false;
+  }
+  if (!category) {
+    alert("Please select a category.");
+    return false;
+  }
+  if (!selectedPayers) {
+    alert("Please select a payer.");
+    return false;
+  }
+  if (activeContainer === "splitEqually" && selectedSplitters.length === 0) {
+    alert("Please select at least one person to split equally.");
+    return false;
+  }
+  if (activeContainer === "splitExactAmount" && totalExactAmount !== parseFloat(amount)) {
+    alert(
+      `The total split (${totalExactAmount}) does not match the expense amount (${amount}).`
+    );
+    return false;
+  }
+  if (activeContainer === "splitPercentage" && warning) {
+    alert("Ensure the split percentages add up to 100%.");
+    return false;
+  }
+  if (activeContainer === "splitAdjustment" && warning) {
+    alert(
+      `The adjustment split total (${totalAdjustment}) does not match the expense amount (${amount}).`
+    );
+    return false;
+  }
+  return true;
+};
+
+const submitExpense = async () => {
+  if (!validateForm()) return;
+
+  const expenseData = {
+    amount: parseFloat(amount),
+    description: description.trim(),
+    paidBy: parseInt(userID),
+    groupID: parseInt(groupID),
+    type: "group",
+    category: category.trim(),
+    image: "dinner.jpg",
+    splits: Object.keys(splitAmounts).map((userID) => ({
+      userID: parseInt(userID),
+      amount: parseFloat(splitAmounts[userID]),
+    })),
+  };
+
+  try {
+    const response = await fetch(
+      "https://finestshare-backend.onrender.com/expense/add",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(expenseData),
+      }
+    );
 
     const data = await response.json();
 
     if (response.ok) {
-      console.log('Expense created successfully:', data);
-      alert('Expense submitted successfully!');
+      alert("Expense submitted successfully!");
     } else {
-      console.error('Failed to create expense.', {
-        status: response.status,
-        responseData: data,
-      });
       alert(`Failed to submit expense. Error: ${data.message || response.statusText}`);
     }
   } catch (error) {
-    console.error('Error submitting expense:', error);
-    alert('An unexpected error occurred while submitting the expense. Please try again.');
+    alert("An unexpected error occurred while submitting the expense. Please try again.");
   }
 };
 
