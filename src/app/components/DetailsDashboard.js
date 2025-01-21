@@ -11,39 +11,49 @@ const DetailsDashboard = ({ entity, type }) => {
   const token = localStorage.getItem("token");
   const [newGroupName, setNewGroupName] = useState(entity.groupName || "");
   const [newCategory, setNewCategory] = useState(entity.category || "");
+  const [isEditing, setIsEditing] = useState(null);
+  const [editExpenseData, setEditExpenseData] = useState({ description: "", category: "" });
+
+  const handleEditExpense = (expense) => {
+    setIsEditing(expense.expenseID);
+    setEditExpenseData({
+      description: expense.description || "",
+      category: expense.category || "",
+    });
+  };
   
-  const handleEditGroup = () => {
-    const updatedGroupData = {
-      groupID: entity.groupID,
-      groupName: newGroupName,
-      category: newCategory,
+  const handleSaveEdit = (expense) => {
+    const updatedExpenseData = {
+      description: editExpenseData.description,
+      category: editExpenseData.category,
     };
   
-    fetch(`https://fairshare-backend-8kqh.onrender.com/group/update/${entity.groupID}`, {
+    fetch(`http://192.168.0.127:8080/expense/update/${expense.expenseID}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(updatedGroupData),
+      body: JSON.stringify(updatedExpenseData),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.message) {
           alert(data.message);
         } else {
-          alert("Group updated successfully.");
+          alert("Expense updated successfully.");
+          setExpenses(expenses.map((e) => (e.expenseID === expense.expenseID ? { ...e, ...updatedExpenseData } : e)));
         }
-        setIsEditing(false);
-        setNewGroupName(data.groupName);
-        setNewCategory(data.category);
       })
-      .catch(() => alert("Failed to update group."));
+      .catch(() => alert("Failed to update expense"));
+  
+    setIsEditing(null); 
   };
-  const handleDeleteGroup = () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this group?");
+
+  const handleDeleteExpense = (expense) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this expense?");
     if (confirmDelete) {
-      fetch(`https://fairshare-backend-8kqh.onrender.com/group/delete/${entity.groupID}`, {
+      fetch(`http://192.168.0.127:8080/expense/${expense.expenseID}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -54,14 +64,14 @@ const DetailsDashboard = ({ entity, type }) => {
           if (data.message) {
             alert(data.message);
           } else {
-            alert("Group deleted successfully.");
-            router.push("/"); // Redirect to home after deletion
+            alert("Expense deleted successfully.");
+            setExpenses(expenses.filter((e) => e.expenseID !== expense.expenseID));
           }
         })
-        .catch(() => alert("Failed to delete group."));
+        .catch(() => alert("Failed to delete expense."));
     }
   };
-    
+  
 
   useEffect(() => {
     const fetchUserID = async () => {
@@ -135,7 +145,6 @@ const DetailsDashboard = ({ entity, type }) => {
   }, [entity, token]);
 
   const handleSettleUp = (expense, amount) => {
-    // Check if expense has the expected properties
     if (expense && (expense.groupID || expense.paidBy)) {
       const settleData = type === "group"
         ? { groupID: expense.groupID, amount }
@@ -177,8 +186,7 @@ const DetailsDashboard = ({ entity, type }) => {
       })
       .catch(() => alert("Failed to settle payment."));
   };
-  
-
+    
   return (
     <div className="bg-slate-200 flex flex-col gap-4 p-6 rounded-md">
       <div className="flex justify-between items-center">
@@ -236,26 +244,81 @@ const DetailsDashboard = ({ entity, type }) => {
                   console.error("Invalid expense entry:", expense);
                   return null;
                 }
+
                 const userSplit = expense.splits?.find((split) => split.userID === currentUserID);
                 const userAmount = userSplit ? userSplit.amount : 0;
+                const isPaidByCurrentUser = expense.paidBy === currentUserID; // Check if the current user paid for the expense
 
                 return (
                   <li key={expense.expenseID} className="bg-white p-4 rounded-md shadow-md">
-                    <h3 className="text-lg font-semibold">{expense.description || "Untitled Expense"}</h3>
-                    <p className="text-sm text-gray-500">{new Date(expense.date).toLocaleString()}</p>
-                    <p className="text-sm text-gray-700">Category: {expense.category || "Uncategorized"}</p>
-                    <p className="text-sm text-gray-700">Total Amount: {expense.amount || "0.00"}</p>
-                    {userSplit && (
+                    {isEditing === expense.expenseID ? (
+                      <div>
+                        <input
+                          type="text"
+                          value={editExpenseData.description}
+                          onChange={(e) => setEditExpenseData({ ...editExpenseData, description: e.target.value })}
+                          className="p-2 border rounded-md w-full mb-2"
+                          placeholder="Description"
+                        />
+                        <input
+                          type="text"
+                          value={editExpenseData.category}
+                          onChange={(e) => setEditExpenseData({ ...editExpenseData, category: e.target.value })}
+                          className="p-2 border rounded-md w-full"
+                          placeholder="Category"
+                        />
+                        <div className="mt-4 flex gap-4">
+                          <button
+                            className="bg-green-500 hover:bg-green-700 text-white rounded-lg p-2"
+                            onClick={() => handleSaveEdit(expense)}
+                          >
+                            Save
+                          </button>
+                          <button
+                            className="bg-gray-500 hover:bg-gray-700 text-white rounded-lg p-2"
+                            onClick={() => setIsEditing(null)}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
                       <>
-                        <p className="text-sm text-gray-700 font-bold">
-                          Your Share: {userAmount || "0.00"}
-                        </p>
-                        <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white rounded-lg p-2 mt-2"
-                          onClick={() => handleSettleUp(expense, userAmount)} // Pass the full expense object
-                        >
-                          Settle Up
-                        </button>
+                        <h3 className="text-lg font-semibold">{expense.description || "Untitled Expense"}</h3>
+                        <p className="text-sm text-gray-500">{new Date(expense.date).toLocaleString()}</p>
+                        <p className="text-sm text-gray-700">Category: {expense.category || "Uncategorized"}</p>
+                        <p className="text-sm text-gray-700">Total Amount: {expense.amount || "0.00"}</p>
+
+                        {userSplit && (
+                          <>
+                            <p className="text-sm text-gray-700 font-bold">
+                              Your Share: {userAmount || "0.00"}
+                            </p>
+                            <button
+                              className="bg-blue-500 hover:bg-blue-700 text-white rounded-lg p-2 mt-2"
+                              onClick={() => handleSettleUp(expense, userAmount)}
+                            >
+                              Settle Up
+                            </button>
+                          </>
+                        )}
+
+                        {isPaidByCurrentUser && (
+                          <div className="flex gap-4 mt-2">
+                            <button
+                              className="bg-orange-500 hover:bg-orange-700 text-white rounded-lg p-2"
+                              onClick={() => handleEditExpense(expense)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="bg-red-500 hover:bg-red-700 text-white rounded-lg p-2"
+                              onClick={() => handleDeleteExpense(expense)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
                       </>
                     )}
                   </li>
@@ -299,6 +362,7 @@ const DetailsDashboard = ({ entity, type }) => {
       )}
     </div>
   );
-};
+}
 
 export default DetailsDashboard;
+
