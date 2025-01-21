@@ -41,6 +41,8 @@ const SettingsPage = () => {
     }
   };
 
+  console.log(userData);
+  
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -61,7 +63,8 @@ const SettingsPage = () => {
       return;
     }
   
-    fetch("http://192.168.0.127:8080/auth/update", {
+
+    fetch("https://fairshare-backend-8kqh.onrender.com/auth/update", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

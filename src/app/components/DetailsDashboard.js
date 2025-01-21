@@ -10,8 +10,10 @@ const DetailsDashboard = ({ entity, type }) => {
   const router = useRouter();
   const token = localStorage.getItem("token");
 
+  console.log(settleModal);
+
+  
   useEffect(() => {
-    // Fetch user ID
     const fetchUserID = async () => {
       try {
         const response = await fetch("https://fairshare-backend-8kqh.onrender.com/auth/me", {
