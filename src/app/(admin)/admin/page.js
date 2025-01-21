@@ -4,7 +4,7 @@ import InternalNavbar from "@/app/_components/(NavigationBar)/InternalNavbar/pag
 import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale,LinearScale,BarElement,PointElement,LineElement } from "chart.js";
-import { Bar, Line, Doughnut } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 
 ChartJS.register(
   Title,
@@ -26,11 +26,10 @@ const AdminPage = () => {
   const [loadingFeedback, setLoadingFeedback] = useState(true);
   const [analyticsData, setAnalyticsData] = useState(null);
 
+  
   const token = localStorage.getItem("token");
 
-
   useEffect(() => {
-    const token = localStorage.getItem("token");
 
     fetch("https://finestshare-backend.onrender.com/admin/analytics", {
       method: "GET",
