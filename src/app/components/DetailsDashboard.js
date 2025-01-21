@@ -10,7 +10,6 @@ const DetailsDashboard = ({ entity, type }) => {
   const router = useRouter();
   const token = localStorage.getItem("token");
 
-  console.log(settleModal);
 
   useEffect(() => {
     const fetchUserID = async () => {
