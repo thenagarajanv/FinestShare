@@ -251,18 +251,6 @@ const Layout = ({ children }) => {
                       <div className="flex justify-start">
                         <p>{friend.name}</p>
                       </div>
-                      {/* <div className="flex justify-end">
-                      <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="white"
-                          width="50px"
-                          height="25px"
-                          onClick={() => handleFriendsDelete(friend.userID)}
-                          >
-                          <path d="M3 6h18v2H3V6zm3.5 3h11l-1 12H7.5L6.5 9zM10 0h4v2h-4V0zm-1 4h6l1 2H8l1-2z" />
-                        </svg>
-                      </div> */}
                     </div>
                   </div>
                 ))

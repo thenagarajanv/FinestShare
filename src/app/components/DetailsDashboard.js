@@ -12,7 +12,6 @@ const DetailsDashboard = ({ entity, type }) => {
 
   console.log(settleModal);
 
-  
   useEffect(() => {
     const fetchUserID = async () => {
       try {
@@ -85,33 +84,49 @@ const DetailsDashboard = ({ entity, type }) => {
   }, [entity, token]);
 
   const handleSettleUp = (expense, amount) => {
-    setSettleModal({
-      visible: true,
-      friendID: expense.groupID || expense.paidBy,
-      amount,
-    });
+    // Check if expense has the expected properties
+    if (expense && (expense.groupID || expense.paidBy)) {
+      const settleData = type === "group"
+        ? { groupID: expense.groupID, amount }
+        : { friendID: expense.paidBy, amount };
+
+      setSettleModal({
+        visible: true,
+        ...settleData,
+      });
+    } else {
+      console.error("Invalid expense data:", expense);
+      alert("Invalid expense data.");
+    }
   };
 
   const handlePayment = (method) => {
-    fetch("https://fairshare-backend-8kqh.onrender.com/expense/settle", {
+    const requestBody = {
+      friendID: settleModal.friendID || null, 
+      groupID: settleModal.groupID || null,   
+      amount: settleModal.amount,
+    };
+  
+    fetch("http://192.168.0.127:8080/expense/settle", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        friendID: settleModal.friendID,
-        amount: settleModal.amount,
-        method,
-      }),
+      body: JSON.stringify(requestBody),
     })
       .then((response) => response.json())
-      .then(() => {
-        alert("Payment settled successfully.");
+      .then((data) => {
+        if (data.message) {
+          alert(data.message);
+        } else {
+          alert("Payment settled successfully.");
+        }
         setSettleModal({ visible: false, friendID: null, amount: 0 });
       })
       .catch(() => alert("Failed to settle payment."));
   };
+  
 
   return (
     <div className="bg-slate-200 flex flex-col gap-4 p-6 rounded-md">
@@ -128,7 +143,7 @@ const DetailsDashboard = ({ entity, type }) => {
           </button>
         )}
       </div>
-      
+
       {settleModal.visible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-md">
@@ -166,7 +181,11 @@ const DetailsDashboard = ({ entity, type }) => {
           ) : (
             <ul className="space-y-4 mt-4">
               {expenses.map((expense) => {
-                const userSplit = expense.splits.find((split) => split.userID === currentUserID);
+                if (!expense) {
+                  console.error("Invalid expense entry:", expense);
+                  return null;
+                }
+                const userSplit = expense.splits?.find((split) => split.userID === currentUserID);
                 const userAmount = userSplit ? userSplit.amount : 0;
 
                 return (
@@ -182,7 +201,7 @@ const DetailsDashboard = ({ entity, type }) => {
                         </p>
                         <button
                           className="bg-blue-500 hover:bg-blue-700 text-white rounded-lg p-2 mt-2"
-                          onClick={() => handleSettleUp(expense, userAmount)}
+                          onClick={() => handleSettleUp(expense, userAmount)} // Pass the full expense object
                         >
                           Settle Up
                         </button>
