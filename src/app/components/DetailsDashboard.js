@@ -182,13 +182,114 @@ const DetailsDashboard = ({ entity, type }) => {
     }
   };
 
+  // const handlePayment = (method) => {
+  //   const requestBody = {
+  //     friendID: settleModal.friendID || null,
+  //     groupID: settleModal.groupID || null,
+  //     amount: settleModal.amount,
+  //   };
+
+  //   if (method === "cash") {
+  //     fetch("https://fairshare-backend-8kqh.onrender.com/expense/settle", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify(requestBody),
+  //     })
+  //       .then((response) => {
+  //         if (!response.ok) {
+  //           throw new Error(`Error: ${response.statusText}`);
+  //         }
+  //         return response.json(); 
+  //       })
+  //       .then((data) => {
+  //         console.log("Payment settled data:", data); 
+    
+  //         if (data.message) {
+  //           alert(data.message);
+  //         } else {
+  //           alert("Payment settled successfully.");
+  //         }
+  //         setSettleModal({ visible: false, friendID: null, amount: 0 });
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error settling payment:", error); 
+  //         alert("Failed to settle payment.");
+  //       });
+  //   }
+  //   else if (method === "razorpay") {
+  //     console.log("Razorpay started..");
+  
+  //     if (typeof Razorpay === "undefined") {
+  //       alert("Razorpay SDK not loaded. Please try again.");
+  //       return;
+  //     }
+  
+  //     const options = {
+  //       key: "rzp_test_nTbKdtgjeOQLhc",
+  //       amount: settleModal.amount * 100, 
+  //       currency: "INR",
+  //       name: "FairShare",
+  //       description: "Payment Settlement",
+  //       handler: async (response) => {
+  //         try {
+  //           console.log(settleModal.friendID, settleModal.groupID, settleModal.amount);
+  //           const backendResponse = await fetch("https://fairshare-backend-8kqh.onrender.com/expense/settle", {
+  //             method: "POST",
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //               Authorization: `Bearer ${token}`,
+  //             },
+  //             body: JSON.stringify({
+  //               friendID: settleModal.friendID,
+  //               groupID: settleModal.groupID,
+  //               amount: settleModal.amount,
+  //             }),
+  //           });
+  //           const backendData = await backendResponse.json();
+  //           if (backendData.message) {
+  //             alert(backendData.message);
+  //           } else {
+  //             alert("Payment settled successfully.");
+  //           }
+  //           setSettleModal({ visible: false, friendID: null, amount: 0 });
+  //         } catch (error) {
+  //           console.error("Payment error:", error);
+  //           alert("An error occurred. Please try again.");
+  //         }
+  //       },
+  //       prefill: {
+  //         name: userName || "Your Name",
+  //         email: userEmail || "user@example.com",
+  //         contact: userPhone || "0000000000",
+  //       },
+  //       theme: {
+  //         color: "#3399cc",
+  //       },
+  //     };
+  
+  //     const razorpay = new window.Razorpay(options);
+  //     razorpay.open();
+  //   }
+  // };
   const handlePayment = (method) => {
     const requestBody = {
       friendID: settleModal.friendID || null,
       groupID: settleModal.groupID || null,
       amount: settleModal.amount,
     };
-
+  
+    const handleResponse = async (response) => {
+      if (!response.ok) {
+        const errorDetails = await response.json();
+        console.error("Error response from backend:", errorDetails);
+        throw new Error(errorDetails.message || "Unknown error occurred.");
+      }
+      return response.json();
+    };
+  
     if (method === "cash") {
       fetch("https://fairshare-backend-8kqh.onrender.com/expense/settle", {
         method: "POST",
@@ -198,15 +299,10 @@ const DetailsDashboard = ({ entity, type }) => {
         },
         body: JSON.stringify(requestBody),
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
-          }
-          return response.json(); 
-        })
+        .then(handleResponse)
         .then((data) => {
-          console.log("Payment settled data:", data); 
-    
+          console.log("Payment settled data:", data);
+  
           if (data.message) {
             alert(data.message);
           } else {
@@ -215,11 +311,10 @@ const DetailsDashboard = ({ entity, type }) => {
           setSettleModal({ visible: false, friendID: null, amount: 0 });
         })
         .catch((error) => {
-          console.error("Error settling payment:", error); 
-          alert("Failed to settle payment.");
+          console.error("Error settling payment:", error);
+          alert("Failed to settle payment. Please try again.");
         });
-    }
-    else if (method === "razorpay") {
+    } else if (method === "razorpay") {
       console.log("Razorpay started..");
   
       if (typeof Razorpay === "undefined") {
@@ -229,26 +324,22 @@ const DetailsDashboard = ({ entity, type }) => {
   
       const options = {
         key: "rzp_test_nTbKdtgjeOQLhc",
-        amount: settleModal.amount * 100, 
+        amount: settleModal.amount * 100,
         currency: "INR",
         name: "FairShare",
         description: "Payment Settlement",
         handler: async (response) => {
           try {
-            console.log(settleModal.friendID, settleModal.groupID, settleModal.amount);
+            console.log("Razorpay handler response:", response);
             const backendResponse = await fetch("https://fairshare-backend-8kqh.onrender.com/expense/settle", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
               },
-              body: JSON.stringify({
-                friendID: settleModal.friendID,
-                groupID: settleModal.groupID,
-                amount: settleModal.amount,
-              }),
+              body: JSON.stringify(requestBody),
             });
-            const backendData = await backendResponse.json();
+            const backendData = await handleResponse(backendResponse);
             if (backendData.message) {
               alert(backendData.message);
             } else {
