@@ -707,7 +707,7 @@ const submitExpense = async () => {
                 Paid by{" "}
                 <span
                   className="cursor-pointer text-green-600"
-                  onClick={() => handleToggle("multiple")}
+                  onClick={() => handleToggle("multiple")} 
                 >
                   Choose Payer
                 </span>{" "}

@@ -3,19 +3,23 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-async function auth(router) {
-  try {
-    window.location.href = "https://finestshare-backend.onrender.com/auth/google";
-  } catch (error) {
-    console.error("Error during authentication:", error);
-    alert("An error occurred during Google authentication.");
-  }
-}
-
 const BasicAuthLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
+  const router = useRouter(); 
+
+  const auth = async () => {
+    try {
+      window.location.href = "https://finestshare-backend.onrender.com/auth/google";
+    } catch (error) {
+      console.error("Error during authentication:", error);
+      alert("An error occurred during Google authentication.");
+    }
+  };
+
+  const handleMoveSignUp = () => {
+    router.push("/auth/signup");
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -33,7 +37,7 @@ const BasicAuthLogin = () => {
       if (response.ok) {
         localStorage.setItem("token", data.token);
 
-        document.cookie = `token=${data.token}; path=/; secure; HttpOnly; max-age=86400`; 
+        document.cookie = `token=${data.token}; path=/; secure; HttpOnly; max-age=86400`;
 
         const roleResponse = await fetch("https://finestshare-backend.onrender.com/auth/me", {
           method: "GET",
@@ -112,7 +116,7 @@ const BasicAuthLogin = () => {
           </button>
           <div className="signinbtn flex justify-center p-2 mt-2 cursor-pointer">
             <img
-              onClick={() => auth(router)}
+              onClick={auth}
               className="btn-auth"
               src="/img/btn_google_signin_dark_pressed_web.png"
               alt="Google Sign-In Button"
@@ -126,6 +130,17 @@ const BasicAuthLogin = () => {
           >
             Forgot password?
           </a>
+        </div>
+        <div className="pt-4 flex justify-center items-center">
+          <p>
+            <label>Don't have an account? </label>
+            <a
+              className="text-blue-600 cursor-pointer"
+              onClick={handleMoveSignUp}
+            >
+              Sign Up
+            </a>
+          </p>
         </div>
       </div>
     </div>

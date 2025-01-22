@@ -4,6 +4,9 @@ import Link from 'next/link';
 const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sidebarProductMenuOpen, setSidebarProductMenuOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [token, setToken] = useState('');
+  const [userID, setUserID] = useState('');
 
   useEffect(() => {
     const storedMenuState = window.localStorage.getItem('sidebarProductMenuOpen');
@@ -13,7 +16,59 @@ const Sidebar = () => {
       setSidebarProductMenuOpen(false);
       window.localStorage.setItem('sidebarProductMenuOpen', 'close');
     }
+
+    const fetchUserDetails = async () => {
+      try {
+        const storedToken = localStorage.getItem('authToken');
+        setToken(storedToken);
+
+        const response = await fetch('https://fairshare-backend-reti.onrender.com/auth/me', {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUserID(data.userID);
+        } else {
+          console.error('Failed to fetch user details.');
+        }
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
+
+    fetchUserDetails();
   }, []);
+
+  const handleSubmitFeedback = async () => {
+    if (!message.trim()) {
+      alert('Please enter a message.');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://fairshare-backend-reti.onrender.com/auth/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userID, message }),
+      });
+
+      if (response.ok) {
+        alert('Feedback submitted successfully!');
+        setMessage('');
+      } else {
+        alert('Failed to submit feedback.');
+      }
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      alert('An error occurred while submitting feedback.');
+    }
+  };
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -74,6 +129,22 @@ const Sidebar = () => {
                   <span className="mx-4">Dashboard</span>
                 </a>
               </Link>
+            </div>
+
+            <div className="px-4 py-6">
+              <h2 className="text-lg text-gray-300 mb-4">Feedbox</h2>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full p-2 text-gray-800 rounded"
+                placeholder="Enter your message here..."
+              />
+              <button
+                onClick={handleSubmitFeedback}
+                className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+              >
+                Submit
+              </button>
             </div>
           </nav>
         </div>

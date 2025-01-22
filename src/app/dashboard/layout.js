@@ -13,7 +13,8 @@ const Layout = ({ children }) => {
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [isAddingFriend, setIsAddingFriend] = useState(false);
   const [selectedEntity, setSelectedEntity] = useState(null);
-
+  const [feedback, setFeedback] = useState("");
+  
   const router = useRouter();
   const menuItems = [
     { label: "Dashboard", path: "/DashboardPage", component: "DashboardPage" },
@@ -125,6 +126,58 @@ const Layout = ({ children }) => {
       }
     } catch (error) {
       console.error("Error deleting friend:", error);
+    }
+  };
+  
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Authentication token not found. Please log in again.");
+        return;
+      }
+  
+      const userResponse = await fetch("https://finestshare-backend.onrender.com/auth/me", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (!userResponse.ok) {
+        alert("Failed to fetch user details. Please log in again.");
+        return;
+      }
+  
+      const userData = await userResponse.json();
+      const userId = userData.user.userID;
+
+      const feedbackResponse = await fetch(
+        "/auth/feedback",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "userId" : userId,
+            "message": feedback,
+          }),
+        }
+      );
+  
+      if (feedbackResponse.ok) {
+        alert("Thank you for your feedback!");
+        setFeedback("");
+      }else{
+        const errorData = await feedbackResponse.json();
+        alert(`Failed to submit feedback: ${errorData.message || "Unknown error"}`);
+      }
+    } catch (error) {
+      // console.error("Error submitting feedback:", error);
+      alert("An error occurred while submitting your feedback. Please try again.");
     }
   };
   
@@ -259,7 +312,27 @@ const Layout = ({ children }) => {
               )}
             </div>
           </div>
+          {/* Feedback Section */}
+        <div className="mt-8 p-4 bg-gray-700 rounded-lg">
+            <p className="text-sm font-bold">Feedback</p>
+            <form onSubmit={handleFeedbackSubmit} className="mt-4">
+              <textarea
+                className="w-full p-2 text-black rounded"
+                placeholder="Write your feedback here..."
+                rows="4"
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+              ></textarea>
+              <button
+                type="submit"
+                className="mt-4 w-full bg-blue-600 text-white py-2 rounded"
+              >
+                Submit Feedback
+              </button>
+            </form>
+          </div>
         </div>
+        
         <main className="w-3/4 p-6">
           {selectedEntity ? (
             <Suspense fallback={<div>Loading...</div>}>

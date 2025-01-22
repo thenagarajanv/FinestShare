@@ -26,7 +26,7 @@ const AdminPage = () => {
   const [loadingFeedback, setLoadingFeedback] = useState(true);
   const [analyticsData, setAnalyticsData] = useState(null);
   const [token, setToken] = useState(null);
-  
+
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken); 
@@ -223,7 +223,7 @@ const AdminPage = () => {
   const handleResolvedToggle = (id, resolved) => {
     const token = localStorage.getItem("token");
 
-    fetch(`https://finestshare-backend.onrender.com/admin/feedback/resolve/${id}`, {
+    fetch(`http://192.168.0.127:8080/admin/feedback/resolve/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -249,15 +249,19 @@ const AdminPage = () => {
 
     switch (action) {
       case "block":
-        url = `https://finestshare-backend.onrender.com/admin/users/block/${userId}`;
+        url = `http://192.168.0.127:8080/admin/users/block/${userId}`;
         method = "POST"
         break;
       case "delete":
-        url = `https://finestshare-backend.onrender.com/admin/users/${userId}`;
+        url = `http://192.168.0.127:8080/admin/users/${userId}`;
         method = "DELETE";
         break;
       case "promote":
-        url = `https://finestshare-backend.onrender.com/admin/users/promote/${userId}`;
+        url = `http://192.168.0.127:8080/admin/users/promote/${userId}`;
+        method = "PUT"
+        break;
+      case "unblock":
+        url = `http://192.168.0.127:8080/admin/users/unblock/${userId}`;
         method = "POST"
         break;
       default:
@@ -284,6 +288,7 @@ const AdminPage = () => {
           .then((data) => {
             const updatedUsers = Array.isArray(data) ? data : data.users || [];
             setUsers(updatedUsers);
+            alert("Success!");
           })
           .catch((error) => {
             console.error("Error fetching updated users:", error);
@@ -294,7 +299,63 @@ const AdminPage = () => {
       });
   };
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, []);
+
+  useEffect(() => {
+    fetch("http://192.168.0.127:8080/admin/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token ? `Bearer ${token}` : "",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const fetchedUsers = Array.isArray(data) ? data : data.users || [];
+        setUsers(fetchedUsers.map(user => ({ ...user, isBlocked: user.isBlocked || false }))); 
+        console.log(fetchedUsers);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+        setLoading(false);
+      });
+  }, [token]);
+
+  const handleToggleBlock = (userId, isBlocked) => {
+    const url = isBlocked
+      ? `http://192.168.0.127:8080/admin/users/unblock/${userId}`
+      : `http://192.168.0.127:8080/admin/users/block/${userId}`;
+    const method = "POST";
+
+    fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token ? `Bearer ${token}` : "",
+      },
+    })
+      .then((response) => response.json())
+      .then(() => {
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.userID === userId ? { ...user, isBlocked: !isBlocked } : user
+          )
+        );
+        alert(`User ${isBlocked ? "unblocked" : "blocked"} successfully!`);
+      })
+      .catch((error) => {
+        console.error("Error toggling block status:", error);
+      });
+  };
+
+  console.log(users);
   
+  if (loading) return <div>Loading...</div>;
+
   const renderActiveView = () => {
     switch (activeView) {
       case "user-list":
@@ -343,12 +404,19 @@ const AdminPage = () => {
                         <td className="px-6 py-3">{user.email.toLowerCase()}</td>
                         <td className="px-6 py-3">{user.role.toLowerCase()}</td>
                         <td className="px-6 py-3 flex space-x-2">
-                          <button
-                            onClick={() => handleUserAction("block", user.userID)}
-                            className="px-4 py-2 bg-red-500 text-white rounded-md"
-                          >
-                            Block
-                          </button>
+                        <button
+                          onClick={() => handleToggleBlock(user.userID, user.isBlocked)}
+                          style={{
+                            backgroundColor: user.isBlocked ? "green" : "red",
+                            color: "white",
+                            padding: "5px 10px",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {user.isBlocked ? "Unblock" : "Block"}{user.isBlocked}
+                        </button>
                           <button
                             onClick={() => handleUserAction("delete", user.userID)}
                             className="px-4 py-2 bg-gray-500 text-white rounded-md"
@@ -410,12 +478,16 @@ const AdminPage = () => {
                             {feedback.resolved ? "Resolved" : "Not Resolved"}
                           </td>
                           <td className="px-6 py-3">
-                            <button
-                              onClick={() => handleResolvedToggle(feedback.id, feedback.resolved)}
-                              className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                            >
-                              {feedback.resolved ? "Mark as Unresolved" : "Mark as Resolved"}
-                            </button>
+                            {feedback.resolved ? (
+                              <span>✅</span>
+                            ) : (
+                              <button
+                                onClick={() => handleResolvedToggle(feedback.id, feedback.resolved)}
+                                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                              >
+                                Mark as Resolved
+                              </button>
+                            )}
                           </td>
                         </tr>
                       ))

@@ -14,6 +14,10 @@ const BasicAuthSignup = () => {
     router.push("/auth/TermsAndConditions");
   }
 
+  const handleMoveLogin = () => {
+    router.push("/auth/login");
+  }
+
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
@@ -124,6 +128,10 @@ const BasicAuthSignup = () => {
             Sign Up
           </button>
         </form>
+        <div className='pt-4'>
+          <label>Already have an account? </label>
+          <a className='text-blue-600 cursor-pointer' onClick={() => handleMoveLogin()}>Login</a>
+        </div>
       </div>
     </div>
   );
