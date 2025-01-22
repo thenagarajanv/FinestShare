@@ -116,7 +116,7 @@ import { usePathname, useRouter } from "next/navigation";const EditGroup = () =>
     setLoading(true);
 
     try {
-      const response = await fetch(`http://192.168.0.127:8080/group/${groupID}`, {
+      const response = await fetch(`https://finestshare-backend.onrender.com/group/${groupID}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -223,7 +223,7 @@ const AdminPage = () => {
   const handleResolvedToggle = (id, resolved) => {
     const token = localStorage.getItem("token");
 
-    fetch(`http://192.168.0.127:8080/admin/feedback/resolve/${id}`, {
+    fetch(`https://finestshare-backend.onrender.com/admin/feedback/resolve/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -249,19 +249,19 @@ const AdminPage = () => {
 
     switch (action) {
       case "block":
-        url = `http://192.168.0.127:8080/admin/users/block/${userId}`;
+        url = `https://finestshare-backend.onrender.com/admin/users/block/${userId}`;
         method = "POST"
         break;
       case "delete":
-        url = `http://192.168.0.127:8080/admin/users/${userId}`;
+        url = `https://finestshare-backend.onrender.com/admin/users/${userId}`;
         method = "DELETE";
         break;
       case "promote":
-        url = `http://192.168.0.127:8080/admin/users/promote/${userId}`;
+        url = `https://finestshare-backend.onrender.com/admin/users/promote/${userId}`;
         method = "PUT"
         break;
       case "unblock":
-        url = `http://192.168.0.127:8080/admin/users/unblock/${userId}`;
+        url = `https://finestshare-backend.onrender.com/admin/users/unblock/${userId}`;
         method = "POST"
         break;
       default:
@@ -305,7 +305,7 @@ const AdminPage = () => {
   }, []);
 
   useEffect(() => {
-    fetch("http://192.168.0.127:8080/admin/users", {
+    fetch("https://finestshare-backend.onrender.com/admin/users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -327,8 +327,8 @@ const AdminPage = () => {
 
   const handleToggleBlock = (userId, isBlocked) => {
     const url = isBlocked
-      ? `http://192.168.0.127:8080/admin/users/unblock/${userId}`
-      : `http://192.168.0.127:8080/admin/users/block/${userId}`;
+      ? `https://finestshare-backend.onrender.com/admin/users/unblock/${userId}`
+      : `https://finestshare-backend.onrender.com/admin/users/block/${userId}`;
     const method = "POST";
 
     fetch(url, {
