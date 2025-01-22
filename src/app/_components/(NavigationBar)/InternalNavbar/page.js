@@ -51,7 +51,7 @@ const InternalNavbar = () => {
           <div className="flex-shrink-0">
             <img
               src="/img/Logo.png"
-              className="h-[150px] cursor-pointer"
+              className="h-[50px] cursor-pointer"
               onClick={() => router.push("/dashboard")}
               alt="Logo"
             />
