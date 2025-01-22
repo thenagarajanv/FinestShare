@@ -124,11 +124,6 @@ const HomePage = () => {
               Sign up
             </a>
           )}
-          <div className="mt-4 text-gray-600 text-sm">
-            Free for <span className="font-medium">iPhone</span>,{" "}
-            <span className="font-medium">Android</span>, and{" "}
-            <span className="font-medium">web</span>.
-          </div>
         </div>
         <div className="lg:w-1/2 flex justify-center mb-8 lg:mb-0 ">
           <div className="w-48  h-48 sm:w-64 sm:h-64 lg:w-96 lg:h-96">
