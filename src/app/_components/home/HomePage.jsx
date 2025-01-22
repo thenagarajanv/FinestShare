@@ -166,6 +166,17 @@ const HomePage = () => {
             />
         </div>
       </div>
+      <div className="flex justify-center items-center mt-12 relative">
+        <video
+          src="/video/FinestShare.mp4"
+          className="w-full max-w-3xl rounded-lg shadow-lg"
+          autoPlay
+          loop
+          muted
+          playsInline
+          controls
+        ></video>
+      </div>
       <div className="m-50">
         <div className="flex justify-center items-center mb-8">
           <Image
@@ -191,7 +202,7 @@ const HomePage = () => {
         </div>
       </div>
     </div>
-            </div>
+    </div>
   );
 };
 
