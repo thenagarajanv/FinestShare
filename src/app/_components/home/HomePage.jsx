@@ -166,6 +166,9 @@ const HomePage = () => {
             />
         </div>
       </div>
+      <div className="flex justify-center items-center font-bold text-lg m-5">
+          <h1 className="font-extrabold h-10">About This Product</h1>
+      </div>
       <div className="flex justify-center items-center mt-12 relative">
         <video
           src="/video/FinestShare.mp4"
@@ -177,7 +180,7 @@ const HomePage = () => {
           controls
         ></video>
       </div>
-      <div className="m-50">
+      <div className="m-50 mt-10">
         <div className="flex justify-center items-center mb-8">
           <Image
             src="/img/dashboard3.png"
