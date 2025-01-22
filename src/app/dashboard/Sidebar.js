@@ -22,7 +22,7 @@ const Sidebar = () => {
         const storedToken = localStorage.getItem('authToken');
         setToken(storedToken);
 
-        const response = await fetch('https://finestshare-backend.onrender.com/auth/me/auth/me', {
+        const response = await fetch('https://finestshare-backend.onrender.com/auth/me', {
           headers: {
             Authorization: `Bearer ${storedToken}`,
           },
@@ -49,7 +49,7 @@ const Sidebar = () => {
     }
 
     try {
-      const response = await fetch('https://finestshare-backend.onrender.com/auth/me/auth/feedback', {
+      const response = await fetch('https://finestshare-backend.onrender.com/auth/feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
