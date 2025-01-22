@@ -30,14 +30,14 @@ export default function FriendsPage() {
     }
 
     try {
-      const response = await fetch("https://192.168.0.127:8080/friend/add", {
+      const response = await fetch("https://finestshare-backend.onrender.com/friend/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
-          friendEmail: email, 
+          "friendEmail": email, 
           message,
         }),
       });
