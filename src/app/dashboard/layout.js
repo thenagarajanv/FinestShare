@@ -154,8 +154,7 @@ const Layout = ({ children }) => {
       const userData = await userResponse.json();
       const userId = userData.user.userID;
 
-      const feedbackResponse = await fetch(
-        "/auth/feedback",
+      const feedbackResponse = await fetch("https://finestshare-backend.onrender.com/auth/feedback",
         {
           method: "POST",
           headers: {

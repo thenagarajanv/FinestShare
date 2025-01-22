@@ -19,10 +19,11 @@ const Sidebar = () => {
 
     const fetchUserDetails = async () => {
       try {
-        const storedToken = localStorage.getItem('authToken');
+        const storedToken = localStorage.getItem('token');
         setToken(storedToken);
 
         const response = await fetch('https://finestshare-backend.onrender.com/auth/me', {
+          method : "GET",
           headers: {
             Authorization: `Bearer ${storedToken}`,
           },
@@ -55,7 +56,7 @@ const Sidebar = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ userID, message }),
+        body: JSON.stringify({ "userId":userID, message }),
       });
 
       if (response.ok) {
