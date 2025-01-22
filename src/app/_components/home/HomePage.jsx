@@ -188,7 +188,7 @@ const HomePage = () => {
         </div>
       </div>
       <div className="m-50">
-        <div className="flex justify-center items-center mb-8">
+        <div className="flex justify-center items-center">
           <Image
             src="/img/dashboard4.png"
             alt="Additional Image"
@@ -199,6 +199,9 @@ const HomePage = () => {
             />
         </div>
       </div>
+    </div>
+    <div className="flex justify-center items-center m-2">
+      <label className="font-semibold font-sans"> &copy;Copyright FinestShare@2025</label>
     </div>
     </div>
   );
