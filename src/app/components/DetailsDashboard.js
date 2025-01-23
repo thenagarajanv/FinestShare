@@ -157,6 +157,8 @@ const DetailsDashboard = ({ entity, type }) => {
         });
         if (!response.ok) throw new Error("Failed to fetch balances");
         const data = await response.json();
+        console.log(data);
+
         setBalances(data);
       } catch (err) {
         console.error("Error fetching balances:", err);
@@ -422,35 +424,30 @@ return (
         )}
       </div>
     )}
-
     {balances && type === "friend" && (
       <div className="mt-6">
         <h2 className="text-xl font-bold">Balances</h2>
-        {balances.iOwe?.length > 0 || balances.theyOweMe?.length > 0 ? (
+        {balances.iOwe > 0 || balances.theyOweMe > 0 ? (
           <>
-            {balances.iOwe?.length > 0 && (
+            {balances.iOwe > 0 && (
               <div>
                 <h3 className="font-bold">I Owe</h3>
-                {balances.iOwe.map((item) => (
-                  <p key={item.friend.userID}>
-                    {item.friend.name}: {item.amountOwed}
-                  </p>
-                ))}
+                <p>
+                  Total: {balances.iOwe}
+                </p>
               </div>
             )}
-            {balances.theyOweMe?.length > 0 && (
+            {balances.theyOweMe > 0 && (
               <div className="mt-4">
                 <h3 className="font-bold">They Owe Me</h3>
-                {balances.theyOweMe.map((item) => (
-                  <p key={item.friend.userID}>
-                    {item.friend.name}: {item.amountOwed}
-                  </p>
-                ))}
+                <p>
+                  Total: {balances.theyOweMe}
+                </p>
               </div>
             )}
           </>
         ) : (
-          <p>Check transactions on Group Page</p>
+          <p>No outstanding balances.</p>
         )}
       </div>
     )}

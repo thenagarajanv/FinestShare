@@ -50,6 +50,22 @@ const SettingsPage = () => {
   };
 
   const handleSaveChanges = () => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(newEmail)) {
+      alert("Please enter a valid email address (must contain '@' and end with '.com').");
+      return;
+    }
+  
+    if (isNaN(newPhone) || newPhone.trim() === "") {
+      alert("Phone number must be a valid number.");
+      return;
+    }
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_])(?=.*[0-9]).{6,}$/;
+    if (newPassword && !passwordRegex.test(newPassword)) {
+      alert("Password must be at least 6 characters long, contain at least one uppercase letter, one special character, and one number.");
+      return;
+    }
+  
     const updatedData = {};
     if (newName !== userData.name) updatedData.name = newName;
     if (newPhone !== (userData.phone || "None")) updatedData.phone = newPhone;
@@ -60,7 +76,7 @@ const SettingsPage = () => {
       alert("No changes to save.");
       return;
     }
-
+  
     fetch("https://finestshare-backend.onrender.com/auth/update", {
       method: "PUT",
       headers: {
@@ -77,7 +93,7 @@ const SettingsPage = () => {
       })
       .then(() => {
         setIsEditing(false);
-        fetchUserData(); 
+        fetchUserData();
         alert("Your changes have been saved successfully!");
       })
       .catch((error) => {
@@ -85,6 +101,7 @@ const SettingsPage = () => {
         alert("Failed to save changes. Please try again.");
       });
   };
+  
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
