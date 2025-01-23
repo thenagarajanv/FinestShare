@@ -198,25 +198,15 @@ const SettingsPage = () => {
 
               <div className="flex justify-between items-center mt-4">
                 <label className="font-medium">Email Address</label>
-                <input
-                  type="text"
-                  value={userData.email}
-                  disabled
-                  className="px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed"
-                />
-              </div>
-
-              <div className="flex justify-between items-center mt-4">
-                <label className="font-medium">Phone Number</label>
                 {isEditing ? (
                   <input
                     type="text"
-                    value={newPhone}
-                    onChange={(e) => setNewPhone(e.target.value)}
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
                     className="px-4 py-2 border border-gray-300 rounded-lg"
                   />
                 ) : (
-                  <span>{userData.phone || "None"}</span>
+                  <span>{userData.email || "None"}</span>
                 )}
               </div>
 

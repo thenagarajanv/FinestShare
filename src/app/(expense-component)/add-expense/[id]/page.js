@@ -680,7 +680,7 @@ const submitExpense = async () => {
                   <div className="flex flex-col gap-4 w-full sm:w-2/3">
                     <div className="flex flex-col gap-2">
                     <div className="flex flex-col gap-2">
-                      <label className="text-sm font-semibold">Amount</label>
+                      <label className="text-sm font-semibold">Amount (INR)</label>
                       <input
                         type="text"
                         className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-100"
