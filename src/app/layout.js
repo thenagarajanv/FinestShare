@@ -11,6 +11,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const metadata = {
+  title: "FinestShare",
+  description: "FinestShare",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

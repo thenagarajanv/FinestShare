@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 const ExternalNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,15 +30,29 @@ const ExternalNavbar = () => {
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0">
+        <div
+          className="flex-shrink-0"
+          onMouseEnter={() => setIsHovering(true)} 
+          onMouseLeave={() => setIsHovering(false)} 
+        >
+          {isHovering ? (
             <img
-              src="/img/Logo.png"
+            src="/img/LOGO.png"
+            className="h-[50px] cursor-pointer"
+            onClick={() => router.push("/")}
+            alt="Logo"
+          />
+          ) : (
+            <video
+              src="/video/FinestLogo.mp4" 
               className="h-[50px] cursor-pointer"
+              autoPlay
+              loop
+              muted
               onClick={() => router.push("/")}
-              alt="Logo"
-            />
-          </div>
-
+            ></video>
+          )}
+        </div>
           <div className="hidden md:flex flex-col md:flex-row gap-4">
             {isLoggedIn ? (
               <button
