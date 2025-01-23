@@ -210,7 +210,7 @@ const DashboardPage = () => {
           <h2 className="font-semibold">Balance Summary</h2>
           <div className="mt-4">
             <p>Total Owed To You: ₹{balanceSummary.totalOwes}</p>
-            <p>Total You Owe: ₹{balanceSummary.totalOwedTo}</p>
+            <p>Total You Owe: ₹{balanceSummary.totalOwedToYou}</p>
           </div>
         </div>
       )}

@@ -74,7 +74,7 @@ const HomePage = () => {
             {state.items.map((item, index) => (
               <button
               key={index}
-              className="flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white rounded-full shadow-md border-2 border-gray-200 hover:border-purple-600 focus:outline-none"
+              className="flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white rounded-full shadow-md border-2 border-gray-200 hover:border-pink-600 focus:outline-none"
               onClick={() => handleItemClick(item)}
               style={{
                 borderColor:
@@ -105,14 +105,14 @@ const HomePage = () => {
           {isLoggedIn ? (
             <a
             href="/dashboard"
-            className="px-6 py-3 text-lg text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md"
+            className="px-6 py-3 text-lg text-white bg-pink-600 hover:bg-pink-700 rounded-lg shadow-md"
             >
               Dashboard
             </a>
           ) : (
             <a
             href="/auth/signup"
-            className="px-6 py-3 text-lg text-white bg-purple-600 hover:bg-purple-700 rounded-lg shadow-md"
+            className="px-6 py-3 text-lg text-white bg-pink-600 hover:bg-pink-700 rounded-lg shadow-md"
             >
               Sign up
             </a>

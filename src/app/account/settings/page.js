@@ -172,7 +172,7 @@ const SettingsPage = () => {
                     />
                     <label
                       htmlFor="avatar"
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+                      className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg cursor-pointer"
                     >
                       Change Profile Picture
                     </label>
@@ -222,7 +222,7 @@ const SettingsPage = () => {
                     />
                     <button
                       onClick={() => setShowPassword(!showPassword)}
-                      className="text-blue-600 hover:text-blue-700"
+                      className="text-pink-600 hover:text-pink-700"
                     >
                       {showPassword ? "🫣" : "👀"}
                     </button>
@@ -253,7 +253,7 @@ const SettingsPage = () => {
             <div className="flex justify-between">
               <button
                 onClick={handleBackToDashboard}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg"
               >
                 Back to Dashboard
               </button>

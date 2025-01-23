@@ -909,7 +909,7 @@ const submitExpense = async () => {
                     </div>
                   ))}
                   <div>
-                    <button onClick={handleCheckClick} className="check-button">Check</button>
+                    <button onClick={handleCheckClick} className="check-button bg-green-600 p-2 m-2  rounded-lg hover:bg-green-800">Check</button>
                   </div>
                   {warning && (
                     <div className="warning-text text-red-500 mt-2 text-center">

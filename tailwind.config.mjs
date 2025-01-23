@@ -8,11 +8,9 @@ export default {
   ],
   theme: {
   	extend: {
-		colors: {
-			'custom-bg-blue': '#292a61',
-			'custom-bg-pink' : '#f0127a',
-		},
   		colors: {
+			"custom-blue" : '#292a61',
+			"custom-pink" : '#f0127a',
   			background: 'var(--background)',
   			foreground: 'var(--foreground)',
   			sidebar: {

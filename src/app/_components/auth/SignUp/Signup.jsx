@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import InnerNavbar from '../../(NavigationBar)/InnerNavbar/page';
 
 const BasicAuthSignup = () => {
   const [name, setName] = useState('');
@@ -44,7 +45,9 @@ const BasicAuthSignup = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div>
+      <InnerNavbar/>
+        <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
         <form onSubmit={handleSignup}>
           <div className="mb-4">
@@ -133,6 +136,7 @@ const BasicAuthSignup = () => {
           <a className='text-blue-600 cursor-pointer' onClick={() => handleMoveLogin()}>Login</a>
         </div>
       </div>
+    </div>
     </div>
   );
 };

@@ -93,41 +93,41 @@ const Layout = ({ children }) => {
     }
   };
 
-  const handleFriendsDelete = async (userId) => {
-    const token = localStorage.getItem("token");
+  // const handleFriendsDelete = async (userId) => {
+  //   const token = localStorage.getItem("token");
   
-    try {
-      const response = await fetch(
-        `https://finestshare-backend.onrender.com/friend/remove/${userId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  //   try {
+  //     const response = await fetch(
+  //       `https://finestshare-backend.onrender.com/friend/remove/${userId}`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
   
-      if (response.ok) {
-        const updatedFriends = friends.filter((friend) => friend.userID !== userId);
-        setFriends(updatedFriends);
+  //     if (response.ok) {
+  //       const updatedFriends = friends.filter((friend) => friend.userID !== userId);
+  //       setFriends(updatedFriends);
   
-        const refreshedResponse = await fetch(
-          `https://finestshare-backend.onrender.com/friend/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const refreshedData = await refreshedResponse.json();
-        setFriends(refreshedData || []);
-      } else {
-        console.error("Failed to delete friend");
-      }
-    } catch (error) {
-      console.error("Error deleting friend:", error);
-    }
-  };
+  //       const refreshedResponse = await fetch(
+  //         `https://finestshare-backend.onrender.com/friend/`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
+  //       const refreshedData = await refreshedResponse.json();
+  //       setFriends(refreshedData || []);
+  //     } else {
+  //       console.error("Failed to delete friend");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting friend:", error);
+  //   }
+  // };
   
   const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
@@ -234,7 +234,7 @@ const Layout = ({ children }) => {
                   }}
                   className={`w-full text-left px-4 py-2 rounded ${
                     activeComponent === item.path
-                      ? "bg-blue-600"
+                      ? "bg-pink-500"
                       : "bg-gray-700"
                   }`}
                 >
@@ -248,7 +248,7 @@ const Layout = ({ children }) => {
             <div className="flex justify-between items-center">
               <p className="text-sm font-bold">Groups</p>
               <button
-                className="bg-blue-600 px-2 py-1 rounded"
+                className="bg-pink-500 px-2 py-1 rounded"
                 onClick={handleAddGroup}
               >
                 + Add
@@ -261,7 +261,7 @@ const Layout = ({ children }) => {
               groups.map((group) => (
                 <div
                   key={group.groupID}
-                  className="bg-gray-600 p-2 rounded mt-2 cursor-pointer"
+                  className="bg-gray-600 hover:bg-pink-500 p-2 rounded mt-2 cursor-pointer"
                   onClick={() => handleGroupClick(group)}
                 >
                   <div className="flex justify-between items-center">
@@ -285,7 +285,7 @@ const Layout = ({ children }) => {
             <div className="flex justify-between items-center">
               <p className="text-sm font-bold">Friends</p>
               <button
-                className="bg-blue-600 px-2 py-1 rounded"
+                className="bg-pink-600 px-2 py-1 rounded"
                 onClick={handleAddFriend}
               >
                 + Add
@@ -298,7 +298,7 @@ const Layout = ({ children }) => {
                 friends.map((friend) => (
                   <div
                     key={friend.userID}
-                    className="bg-gray-600 p-2 rounded mt-2 cursor-pointer"
+                    className="bg-gray-600 hover:bg-pink-600 p-2 rounded mt-2 cursor-pointer"
                     onClick={() => handleFriendClick(friend)}
                   >
                     <div className="flex justify-between items-center">
@@ -324,7 +324,7 @@ const Layout = ({ children }) => {
               ></textarea>
               <button
                 type="submit"
-                className="mt-4 w-full bg-blue-600 text-white py-2 rounded"
+                className="mt-4 w-full bg-pink-600 hover:bg-pink-900 text-white py-2 rounded"
               >
                 Submit Feedback
               </button>

@@ -26,12 +26,15 @@ const DetailsDashboard = ({ entity, type }) => {
     });
   };
   
+  const [currentDate, setCurrentDate] = useState(null);
+
+  
   const handleSaveEdit = (expense) => {
     const updatedExpenseData = {
       description: editExpenseData.description,
       category: editExpenseData.category,
     };
-  
+    
     fetch(`https://finestshare-backend.onrender.com/expense/${expense.expenseID}`, {
       method: "PUT",
       headers: {
@@ -40,27 +43,27 @@ const DetailsDashboard = ({ entity, type }) => {
       },
       body: JSON.stringify(updatedExpenseData),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message) {
-          alert(data.message);
-        } else {
-          alert("Expense updated successfully.");
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message) {
+        alert(data.message);
+      } else {
+        alert("Expense updated successfully.");
           setExpenses(expenses.map((e) => (e.expenseID === expense.expenseID ? { ...e, ...updatedExpenseData } : e)));
         }
       })
       .catch(() => alert("Failed to update expense"));
-  
-    setIsEditing(null); 
-  };
-
-  const handleDeleteExpense = (expense) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this expense?");
-    if (confirmDelete) {
-      fetch(`https://finestshare-backend.onrender.com/expense/${expense.expenseID}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      
+      setIsEditing(null); 
+    };
+    
+    const handleDeleteExpense = (expense) => {
+      const confirmDelete = window.confirm("Are you sure you want to delete this expense?");
+      if (confirmDelete) {
+        fetch(`https://finestshare-backend.onrender.com/expense/${expense.expenseID}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
         },
       })
         .then((response) => response.json())
@@ -73,9 +76,13 @@ const DetailsDashboard = ({ entity, type }) => {
           }
         })
         .catch(() => alert("Failed to delete expense."));
-    }
-  };
-
+      }
+    };
+    
+    useEffect(() => {
+      setCurrentDate(new Date().toLocaleString());
+    }, []);
+    
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -379,43 +386,82 @@ return (
                       </div>
                     </div>
                   ) : (
+                    // <>
+                    //   <h3 className="text-lg font-semibold">{expense.description || "Untitled Expense"}</h3>
+                    //   <p className="text-sm text-gray-500">{new Date(expense.date).toLocaleString()}</p>
+                    //   <p className="text-sm text-gray-700">Category: {expense.category || "Uncategorized"}</p>
+                    //   <p className="text-sm text-gray-700">Total Amount: {expense.amount || "0.00"}</p>
+
+                    //   {userSplit && (
+                    //     <>
+                    //       <p className="text-sm text-gray-700 font-bold">
+                    //         Your Share: {userAmount || "0.00"}
+                    //       </p>
+                    //       <div className="flex justify-end">
+                    //       <button
+                    //         className="bg-pink-500 hover:bg-pink-600 text-white rounded-lg p-2 mt-2"
+                    //         onClick={() => handleSettleUp(expense, userAmount)}
+                    //       >
+                    //         Settle Up
+                    //       </button>
+                    //       </div>
+                    //     </>
+                    //   )}
+
+                    //   {isPaidByCurrentUser && (
+                    //     <div className="flex gap-4 mt-2">
+                    //       <button
+                    //         className="bg-orange-500 hover:bg-orange-700 text-white rounded-lg p-2"
+                    //         onClick={() => handleEditExpense(expense)}
+                    //       >
+                    //         Edit
+                    //       </button>
+                    //       <button
+                    //         className="bg-red-500 hover:bg-red-700 text-white rounded-lg p-2"
+                    //         onClick={() => handleDeleteExpense(expense)}
+                    //       >
+                    //         Delete
+                    //       </button>
+                    //     </div>
+                    //   )}
+                    // </>
                     <>
                       <h3 className="text-lg font-semibold">{expense.description || "Untitled Expense"}</h3>
                       <p className="text-sm text-gray-500">{new Date(expense.date).toLocaleString()}</p>
                       <p className="text-sm text-gray-700">Category: {expense.category || "Uncategorized"}</p>
                       <p className="text-sm text-gray-700">Total Amount: {expense.amount || "0.00"}</p>
+                      <p className="text-sm text-gray-700 font-bold">
+                        Your Share: {userAmount || "0.00"}
+                      </p>
 
-                      {userSplit && (
-                        <>
-                          <p className="text-sm text-gray-700 font-bold">
-                            Your Share: {userAmount || "0.00"}
-                          </p>
+                      <div className="flex justify-between items-center mt-4">
+                        {isPaidByCurrentUser && (
+                          <div className="flex gap-4">
+                            <button
+                              className="bg-orange-500 hover:bg-orange-700 text-white rounded-lg p-2"
+                              onClick={() => handleEditExpense(expense)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="bg-red-500 hover:bg-red-700 text-white rounded-lg p-2"
+                              onClick={() => handleDeleteExpense(expense)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                        {userSplit && (
                           <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white rounded-lg p-2 mt-2"
+                            className="bg-pink-500 hover:bg-pink-600 text-white rounded-lg p-2"
                             onClick={() => handleSettleUp(expense, userAmount)}
                           >
                             Settle Up
                           </button>
-                        </>
-                      )}
-
-                      {isPaidByCurrentUser && (
-                        <div className="flex gap-4 mt-2">
-                          <button
-                            className="bg-orange-500 hover:bg-orange-700 text-white rounded-lg p-2"
-                            onClick={() => handleEditExpense(expense)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="bg-red-500 hover:bg-red-700 text-white rounded-lg p-2"
-                            onClick={() => handleDeleteExpense(expense)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </>
+
                   )}
                 </li>
               );

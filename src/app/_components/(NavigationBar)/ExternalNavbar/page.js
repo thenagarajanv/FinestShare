@@ -27,7 +27,7 @@ const ExternalNavbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-gray-800 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
         <div
@@ -37,14 +37,14 @@ const ExternalNavbar = () => {
         >
           {isHovering ? (
             <img
-            src="/img/LOGO.png"
+            src="/img/logoimg.png"
             className="h-[50px] cursor-pointer"
             onClick={() => router.push("/")}
             alt="Logo"
           />
           ) : (
             <video
-              src="/video/FinestLogo.mp4" 
+              src="/video/logovideo.mp4" 
               className="h-[50px] cursor-pointer"
               autoPlay
               loop
@@ -65,13 +65,13 @@ const ExternalNavbar = () => {
               <>
                 <a
                   href="/auth/signup"
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-md"
+                  className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-medium shadow-md"
                 >
                   Sign Up
                 </a>
                 <a
                   href="/auth/login"
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-md"
+                  className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-medium shadow-md"
                 >
                   Log In
                 </a>
