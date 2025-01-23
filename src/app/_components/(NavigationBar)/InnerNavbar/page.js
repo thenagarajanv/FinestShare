@@ -7,7 +7,7 @@ const InnerNavbar = () => {
   return (
     <nav className="bg-gray-800 shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-16" onClick={() => router.push("/")}>
         <div
           className="flex-shrink-0"
           onMouseEnter={() => setIsHovering(true)} 
