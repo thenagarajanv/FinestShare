@@ -159,7 +159,7 @@ const HomePage = () => {
       </div>
       <div className="flex justify-center items-center mt-12 relative">
         <video
-          src="/video/FinestShare.mp4"
+          src="/video/Logo.mp4"
           className="w-full max-w-3xl rounded-lg shadow-lg"
           autoPlay
           loop
