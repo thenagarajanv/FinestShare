@@ -8,11 +8,14 @@ async function generateMetadata() {
 }
 
 import Login from '@/app/_components/auth/Login/Login.jsx';
+import { Suspense } from 'react';
 
 const LogIn = () => {
   return <div>
     <div className="md-3">
-      <Login/>
+      <Suspense  fallback={<div>Loading...</div>}>
+        <Login/>
+      </Suspense>
     </div>
   </div>;
 };

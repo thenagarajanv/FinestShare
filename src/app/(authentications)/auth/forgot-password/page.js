@@ -7,13 +7,17 @@ export async function generateMetadata() {
     title,describe
   };
 }
+
 import Forgotpassword from '@/app/_components/auth/Forget-Password/ForgetPassword.jsx';
+import { Suspense } from 'react';
 
 
 const ForgetPassword = () => {
   return <div>
     <div className="md-3">
-      <Forgotpassword/>
+      <Suspense>
+        <Forgotpassword/>
+      </Suspense>
     </div>
   </div>;
 };

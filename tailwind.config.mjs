@@ -8,6 +8,9 @@ export default {
   ],
   theme: {
   	extend: {
+		fontFamily:{
+			basement:["var(--font-basement)"],
+		},
   		colors: {
 			"custom-blue" : '#292a61',
 			"custom-pink" : '#f0127a',

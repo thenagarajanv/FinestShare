@@ -7,11 +7,14 @@ export async function generateMetadata() {
   };
 }
 import SignUp from '@/app/_components/auth/SignUp/Signup.jsx'
+import { Suspense } from 'react';
 
 const SigUp = () => {
   return <div>
     <div className="md-3">
-      <SignUp/>
+      <Suspense  fallback={<div>Loading...</div>}>
+        <SignUp/>
+      </Suspense>
     </div>
   </div>;
 };

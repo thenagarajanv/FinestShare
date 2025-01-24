@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 const InternalNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,11 +13,14 @@ const InternalNavbar = () => {
   const [isHovering, setIsHovering] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
+  const getPath = usePathname().split("/").at[1];
+  console.log(getPath);
+
+  useEffect(() =>{
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
-      fetch("https://finestshare-backend.onrender.com/auth/me", {
+      const test = async () => await fetch("https://finestshare-backend.onrender.com/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -25,9 +29,10 @@ const InternalNavbar = () => {
         .then((data) => {
           setUserName(data.user.name);
           setProfileImage(data.user.image);
-          setUserRole(data.user.role); // Set user role
+          setUserRole(data.user.role); 
         })
         .catch((error) => console.error("Error fetching user data:", error));
+        test();
     } else {
       setIsLoggedIn(false);
     }
@@ -57,16 +62,21 @@ const InternalNavbar = () => {
           onMouseEnter={() => setIsHovering(true)} 
           onMouseLeave={() => setIsHovering(false)} 
         >
-          <div className="flex align-middle items-center leading-0 text-center uppercase justify-center text-white font-mono text-xl font-extrabold">
+          <div className="flex align-middle items-center leading-0   text-center uppercase justify-center text-white  text-xl font-extrabold">
               Finest
-            <img
+            <Image
+            width={200}
+            height={200}
             id="logo"
             src="/img/pnglogo.png"
-            className={` h-[50px] cursor-pointer`}
+            className={` h-12 w-12  cursor-pointer`}
             onClick={() => router.push("/")}
             alt="Logo"
             />
-            coder
+           
+
+            SHARE
+           
             </div>
         </div>
 
@@ -77,8 +87,10 @@ const InternalNavbar = () => {
                   onClick={toggleMenu}
                   className="flex items-center gap-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-medium shadow-md"
                 >
-                  <img
+                  <Image
                     src={profileImage || "/img/heart.png"} 
+                    width={200}
+                    height={200}
                     alt="Profile"
                     className="h-8 w-8 rounded-full object-cover"
                   />

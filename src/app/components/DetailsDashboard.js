@@ -164,8 +164,7 @@ const DetailsDashboard = ({ entity, type }) => {
         });
         if (!response.ok) throw new Error("Failed to fetch balances");
         const data = await response.json();
-        console.log(data);
-
+        // console.log(data);
         setBalances(data);
       } catch (err) {
         console.error("Error fetching balances:", err);

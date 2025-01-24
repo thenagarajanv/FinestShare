@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale,LinearScale,BarElement,PointElement,LineElement } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
-
+import Image from "next/image";
 ChartJS.register(
   Title,
   Tooltip,
@@ -389,7 +389,7 @@ const AdminPage = () => {
                         <td className="px-6 py-3">{user.userID}</td>
                         <td className="px-6 py-3 text-center">
                           {user.image ? (
-                            <img
+                            <Image
                               src={user.image}
                               alt={user.name}
                               className="w-10 h-10 rounded-full object-cover"
