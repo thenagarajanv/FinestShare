@@ -50,27 +50,24 @@ const InternalNavbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
         <div
+          className=" lg:hidden">
+        </div>
+        <div
           className="flex-shrink-0"
           onMouseEnter={() => setIsHovering(true)} 
           onMouseLeave={() => setIsHovering(false)} 
         >
-          {isHovering ? (
+          <div className="flex align-middle items-center leading-0 text-center uppercase justify-center text-white font-mono text-xl font-extrabold">
+              Finest
             <img
-            src="/img/logoimg.png"
-            className="h-[50px] cursor-pointer"
+            id="logo"
+            src="/img/pnglogo.png"
+            className={` h-[50px] cursor-pointer`}
             onClick={() => router.push("/")}
             alt="Logo"
-          />
-          ) : (
-            <video
-              src="/video/logovideo.mp4" 
-              className="h-[50px] cursor-pointer"
-              autoPlay
-              loop
-              muted
-              onClick={() => router.push("/")}
-            ></video>
-          )}
+            />
+            coder
+            </div>
         </div>
 
           <div className="hidden md:flex flex-col md:flex-row gap-4">

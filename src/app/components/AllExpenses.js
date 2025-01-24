@@ -102,7 +102,8 @@ const ExpenseDetails = () => {
   };
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}>
+   <div className="p-2 h-screen overflow-y-scroll">
+     <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }} >
       <h1>Expense Details</h1>
       <p>
         <strong>User Name:</strong> {userName}
@@ -167,7 +168,8 @@ const ExpenseDetails = () => {
       ) : (
         <p>No expenses found.</p>
       )}
-    </div>
+      </div>
+   </div>
   );
 };
 

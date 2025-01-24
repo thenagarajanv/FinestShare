@@ -35,23 +35,18 @@ const ExternalNavbar = () => {
           onMouseEnter={() => setIsHovering(true)} 
           onMouseLeave={() => setIsHovering(false)} 
         >
-          {isHovering ? (
+            <div className="flex align-middle items-center text-center uppercase justify-center text-white font-mono text-xl font-extrabold">
+              Finest
             <img
-            src="/img/logoimg.png"
-            className="h-[50px] cursor-pointer"
+            id="logo"
+            src="/img/pnglogo.png"
+            className={` h-[50px] cursor-pointer`}
             onClick={() => router.push("/")}
             alt="Logo"
-          />
-          ) : (
-            <video
-              src="/video/logovideo.mp4" 
-              className="h-[50px] cursor-pointer"
-              autoPlay
-              loop
-              muted
-              onClick={() => router.push("/")}
-            ></video>
-          )}
+            />
+            coder
+            </div>
+          
         </div>
           <div className="hidden md:flex flex-col md:flex-row gap-4">
             {isLoggedIn ? (

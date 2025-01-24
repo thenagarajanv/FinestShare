@@ -1,11 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import {useRouter} from "next/navigation";
 
 const InnerNavbar = () => {
   const [isHovering, setIsHovering] = useState(false);
-  
+  const router = useRouter();
   return (
-    <nav className="bg-gray-800 shadow-md sticky top-0 z-50">
+  <div className="p-2 overflow-y-scroll h-screen">
+      <nav className="bg-gray-800 shadow-md  top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16" onClick={() => router.push("/")}>
         <div
@@ -13,27 +15,22 @@ const InnerNavbar = () => {
           onMouseEnter={() => setIsHovering(true)} 
           onMouseLeave={() => setIsHovering(false)} 
         >
-          {isHovering ? (
+          <div className="flex align-middle items-center text-center uppercase justify-center text-white font-mono text-xl font-extrabold">
+              Finest
             <img
-            src="/img/logoimg.png"
-            className="h-[50px] cursor-pointer"
+            id="logo"
+            src="/img/pnglogo.png"
+            className={` h-[50px] cursor-pointer`}
             onClick={() => router.push("/")}
             alt="Logo"
-          />
-          ) : (
-            <video
-              src="/video/logovideo.mp4" 
-              className="h-[50px] cursor-pointer"
-              autoPlay
-              loop
-              muted
-              onClick={() => router.push("/")}
-            ></video>
-          )}
+            />
+            coder
+            </div>
         </div>
         </div>
       </div>
     </nav>
+  </div>
   );
 };
 

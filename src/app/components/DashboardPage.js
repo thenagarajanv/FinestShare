@@ -135,7 +135,7 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="p-2 h-screen overflow-y-scroll">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
       <div className="mt-6">
         {/* <div className="flex gap-4 flex justify-end items-center">

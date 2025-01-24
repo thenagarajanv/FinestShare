@@ -285,7 +285,8 @@ const DetailsDashboard = ({ entity, type }) => {
   };
   
 return (
-  <div className="bg-slate-200 flex flex-col gap-4 p-6 rounded-md">
+  <div className="p-2 h-screen overflow-y-scroll">
+     <div className="bg-slate-200 flex flex-col gap-4 p-6 rounded-md">
     <div className="flex justify-between items-center">
     <h1 className="text-black font-extrabold text-2xl">
       {type === "group" ? entity?.groupName : `Friend: ${entity?.name}`} Dashboard
@@ -386,45 +387,6 @@ return (
                       </div>
                     </div>
                   ) : (
-                    // <>
-                    //   <h3 className="text-lg font-semibold">{expense.description || "Untitled Expense"}</h3>
-                    //   <p className="text-sm text-gray-500">{new Date(expense.date).toLocaleString()}</p>
-                    //   <p className="text-sm text-gray-700">Category: {expense.category || "Uncategorized"}</p>
-                    //   <p className="text-sm text-gray-700">Total Amount: {expense.amount || "0.00"}</p>
-
-                    //   {userSplit && (
-                    //     <>
-                    //       <p className="text-sm text-gray-700 font-bold">
-                    //         Your Share: {userAmount || "0.00"}
-                    //       </p>
-                    //       <div className="flex justify-end">
-                    //       <button
-                    //         className="bg-pink-500 hover:bg-pink-600 text-white rounded-lg p-2 mt-2"
-                    //         onClick={() => handleSettleUp(expense, userAmount)}
-                    //       >
-                    //         Settle Up
-                    //       </button>
-                    //       </div>
-                    //     </>
-                    //   )}
-
-                    //   {isPaidByCurrentUser && (
-                    //     <div className="flex gap-4 mt-2">
-                    //       <button
-                    //         className="bg-orange-500 hover:bg-orange-700 text-white rounded-lg p-2"
-                    //         onClick={() => handleEditExpense(expense)}
-                    //       >
-                    //         Edit
-                    //       </button>
-                    //       <button
-                    //         className="bg-red-500 hover:bg-red-700 text-white rounded-lg p-2"
-                    //         onClick={() => handleDeleteExpense(expense)}
-                    //       >
-                    //         Delete
-                    //       </button>
-                    //     </div>
-                    //   )}
-                    // </>
                     <>
                       <h3 className="text-lg font-semibold">{expense.description || "Untitled Expense"}</h3>
                       <p className="text-sm text-gray-500">{new Date(expense.date).toLocaleString()}</p>
@@ -497,6 +459,7 @@ return (
         )}
       </div>
     )}
+  </div>
   </div>
 );
 }

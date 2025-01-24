@@ -852,7 +852,7 @@ const submitExpense = async () => {
                         {name}
                       </label>
                       <label className="text-right">
-                        ${splitAmounts[userID]?.toFixed(2) || "0.00"}
+                        {splitAmounts[userID]?.toFixed(2) || "0.00"}
                       </label>
                     </div>
                   ))}
@@ -905,7 +905,7 @@ const submitExpense = async () => {
                         onChange={(e) => handleInputChange(e, userID)} 
                         onBlur={() => handleInputBlur(userID)}
                       />
-                      <p className="ml-4">${userAmounts[userID] || "0.00"}</p>
+                      <p className="ml-4">{userAmounts[userID] || "0.00"}</p>
                     </div>
                   ))}
                   <div>
@@ -936,7 +936,7 @@ const submitExpense = async () => {
                         onChange={(e) => handleAdjustmentChange(e, userID)}
                       />
                       <label className="text-right">
-                        ${adjustmentAmounts[userID] || "0.00"}
+                        {adjustmentAmounts[userID] || "0.00"}
                       </label>
                     </div>
                   ))}
@@ -949,7 +949,7 @@ const submitExpense = async () => {
                 </div>
                 
                 {activeContainer !== "splitPercentage" && (
-                  <div>Total: ${!isNaN(totalAmount) ? totalAmount.toFixed(2) : "0.00"}</div>
+                  <div>Total: {!isNaN(totalAmount) ? totalAmount.toFixed(2) : "0.00"}</div>
                 )}
               </div>
               <div className="flex justify-between items-center gap-4">
