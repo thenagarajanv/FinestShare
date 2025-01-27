@@ -40,8 +40,13 @@ const DashboardPage = () => {
         .then((response) => response.json())
         .then((data) => {
           setUserData(data.user);
-          setExpenses(data.user.expenses);
-
+          const sortedExpenses = data.user.expenses.sort((a, b) => {
+            const dateA = new Date(a.date).setHours(0, 0, 0, 0); 
+            const dateB = new Date(b.date).setHours(0, 0, 0, 0);
+            return dateB - dateA;
+          });
+          // setExpenses(data.user.expenses);
+          setExpenses(sortedExpenses);
           const totalOwedToYou = data.user.balances.reduce((acc, balance) => {
             if (balance.amountOwed > 0) acc += balance.amountOwed;
             return acc;
