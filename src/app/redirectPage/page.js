@@ -55,9 +55,9 @@ const RedirectPage = () => {
     }
   }, [searchParams, router]);
 
-  return <div>Loading...</div>;
+  return <div suppressHydrationWarning>Loading...</div>;
 };
 
 export default function Page() {
-  return <Suspense fallback={<div>Loading...</div>}> <RedirectPage /> </Suspense>;
+  return <Suspense fallback={<div>Loading...</div>}> <RedirectPage suppressHydrationWarning /> </Suspense>;
 }

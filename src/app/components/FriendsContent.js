@@ -1,5 +1,5 @@
 const FriendsContent = () => {
-    return <div>Friends Content Loaded!</div>;
+    return <div suppressHydrationWarning>Friends Content Loaded!</div>;
   };
   
   export default FriendsContent;

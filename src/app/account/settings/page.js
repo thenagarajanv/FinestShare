@@ -55,11 +55,7 @@ const SettingsPage = () => {
       alert("Please enter a valid email address (must contain '@' and end with '.com').");
       return;
     }
-  
-    if (isNaN(newPhone) || newPhone.trim() === "") {
-      alert("Phone number must be a valid number.");
-      return;
-    }
+
     const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_])(?=.*[0-9]).{6,}$/;
     if (newPassword && !passwordRegex.test(newPassword)) {
       alert("Password must be at least 6 characters long, contain at least one uppercase letter, one special character, and one number.");
@@ -204,7 +200,7 @@ const SettingsPage = () => {
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
                     className="px-4 py-2 border border-gray-300 rounded-lg"
-                  />
+                   disabled/>
                 ) : (
                   <span>{userData.email || "None"}</span>
                 )}
@@ -231,6 +227,22 @@ const SettingsPage = () => {
                   <span>••••••••••</span>
                 )}
               </div>
+
+              <div className="flex justify-between items-center mt-4">
+                <label className="font-medium">Phone number</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={newPhone
+                    }
+                    onChange={(e) => setNewPhone(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg"
+                   />
+                ) : (
+                  <span>{userData.phone || "None"}</span>
+                )}
+              </div>
+
 
               <div className="mt-6 flex justify-end">
                 <button

@@ -11,9 +11,10 @@ const InternalNavbar = () => {
   const [profileImage, setProfileImage] = useState("");
   const [userRole, setUserRole] = useState("");
   const [isHovering, setIsHovering] = useState(false);
+  
   const router = useRouter();
 
-  const getPath = usePathname().split("/").at[1];
+  const getPath = usePathname().split("/").pop(0);
   console.log(getPath);
 
   useEffect(() =>{
@@ -94,6 +95,7 @@ const InternalNavbar = () => {
                     alt="Profile"
                     className="h-8 w-8 rounded-full object-cover"
                   />
+                  
                   {userName} ▼
                 </button>
                 {isMenuOpen && (
@@ -101,7 +103,7 @@ const InternalNavbar = () => {
                     {userRole.toLowerCase() === "admin" && (
                       <a
                         href="/admin"
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                        className={"block px-4 py-2 text-gray-700 hover:bg-gray-100 ${}"} 
                       >
                         Admin Dashboard
                       </a>
@@ -199,7 +201,7 @@ const InternalNavbar = () => {
                   Your Account
                 </a>
                 {userRole.toLowerCase() === "admin" && (
-                  <a
+                  <a 
                     href="/admin"
                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                   >

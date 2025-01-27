@@ -22,6 +22,7 @@ const Layout = ({ children }) => {
     { label: "Dashboard", path: "/DashboardPage", component: "DashboardPage" },
     { label: "Recent Activities", path: "/RecentActivitiesPage", component: "RecentActivitiesPage" },
     { label: "All Expenses", path: "/AllExpenses", component: "AllExpenses" },
+    { label: "All Settlements", path: "/Settlements", component: "Settlements" },
   ];
   useEffect(() => {
     const fetchGroups = async () => {

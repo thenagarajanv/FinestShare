@@ -102,7 +102,7 @@ const ExpenseDetails = () => {
   };
 
   return (
-   <div className="p-2 h-screen overflow-y-scroll">
+   <div className="p-2 h-screen overflow-y-scroll" suppressHydrationWarning>
      <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }} >
       <h1>Expense Details</h1>
       <p>

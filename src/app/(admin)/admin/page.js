@@ -360,7 +360,7 @@ const AdminPage = () => {
     switch (activeView) {
       case "user-list":
         return (
-          <div className="p-8 bg-gray-50 min-h-screen cursor-no">
+          <div className="p-8 bg-gray-50 min-h-screen cursor-no" suppressHydrationWarning>
             <div className="flex justify-center items-center">
               <h1 className="text-2xl font-bold mb-6 text-gray-700">User List</h1>
             </div>
@@ -387,19 +387,21 @@ const AdminPage = () => {
                     users.map((user) => (
                       <tr key={user.userID} className="border-b text-gray-700 hover:bg-gray-100">
                         <td className="px-6 py-3">{user.userID}</td>
-                        <td className="px-6 py-3 text-center">
-                          {user.image ? (
-                            <Image
-                              src={user.image}
-                              alt={user.name}
-                              className="w-10 h-10 rounded-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-10 h-10 bg-gray-300 rounded-full flex justify-center items-center">
-                              <span className="text-xs text-gray-500">No Image</span>
-                            </div>
-                          )}
-                        </td>
+                          <td className="px-6 py-3 text-center">
+                            {user.image ? (
+                              <img
+                                src={user.image}
+                                alt={user.name}
+                                width={40} 
+                                height={40}
+                                className="w-10 h-10 rounded-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 bg-gray-300 rounded-full flex justify-center items-center">
+                                <span className="text-xs text-gray-500">No Image</span>
+                              </div>
+                            )}
+                          </td>
                         <td className="px-6 py-3">{user.name.toLowerCase()}</td>
                         <td className="px-6 py-3">{user.email.toLowerCase()}</td>
                         <td className="px-6 py-3">{user.role.toLowerCase()}</td>

@@ -580,7 +580,7 @@ const submitExpense = async () => {
               <div className="checkbox-user-details">
                 <div className="people-container mt-3">
                   <div className="grid grid-cols-1 gap-4">
-                    <button
+                    {/* <button
                       className={`flex items-center justify-center p-2 rounded-md shadow-md ${
                         selectedSplitters.some(
                           (splitter) => splitter[0] === groupMembers.createdBy
@@ -595,8 +595,8 @@ const submitExpense = async () => {
                         })
                       }
                     >
-                      <span className="flex-1 text-center">You</span>
-                    </button>
+                      <span className="flex-1 text-center">dev</span>
+                    </button> */}
 
                     {isGroupMembersArray.length > 0 ? (
                       isGroupMembersArray.map((member, idx) => (
@@ -612,7 +612,7 @@ const submitExpense = async () => {
                           onClick={() => handleSelectSplitter(member)}
                         >
                           <span className="flex-1 text-center">
-                            {member.name}
+                            {member.userID==userID ?"You": member.name}
                           </span>
                         </button>
                       ))

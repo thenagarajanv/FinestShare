@@ -284,7 +284,7 @@ const DetailsDashboard = ({ entity, type }) => {
   };
   
 return (
-  <div className="p-2 h-screen overflow-y-scroll">
+  <div className="p-2 h-screen overflow-y-scroll" suppressHydrationWarning>
      <div className="bg-slate-200 flex flex-col gap-4 p-6 rounded-md">
     <div className="flex justify-between items-center">
     <h1 className="text-black font-extrabold text-2xl">

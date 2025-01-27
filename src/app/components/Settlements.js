@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-const RecentActivitiesPage = () => {
+const SettlementsPages = () => {
   const [activities, setActivities] = useState([]);
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -18,21 +18,27 @@ const RecentActivitiesPage = () => {
         .then((response) => response.json())
         .then((data) => {
           setUserData(data.user);
-          fetch("https://finestshare-backend.onrender.com/activities", {
+
+          fetch("https://finestshare-backend.onrender.com/expense/settle", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           })
             .then((response) => response.json())
             .then((activitiesData) => {
-              if (activitiesData.activities && Array.isArray(activitiesData.activities)) {
-                const formattedActivities = activitiesData.activities.map((activity) => ({
-                  ...activity,
-                  description: activity.description.replace(
-                    "You",
-                    data.user.name
-                  ),
-                }));
+              if (activitiesData && Array.isArray(activitiesData)) {
+                const formattedActivities = activitiesData.map((activity) => {
+                  const updatedDescription = activity.description.replace(
+                    /Settled (\d+) in group ID undefined\./,
+                    `Settled $1 in group ID ${activity.id || "N/A"}.`
+                  );
+
+                  return {
+                    ...activity,
+                    description: updatedDescription,
+                  };
+                });
+
                 setActivities(formattedActivities);
               } else {
                 setError("Activities data is not in the expected format.");
@@ -42,7 +48,7 @@ const RecentActivitiesPage = () => {
               console.error("Error fetching activities:", error);
               setError("Failed to fetch activities.");
             })
-            .finally(() => setLoading(false)); 
+            .finally(() => setLoading(false));
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
@@ -51,15 +57,15 @@ const RecentActivitiesPage = () => {
         });
     } else {
       setError("No token found. Please log in.");
-      setLoading(false); 
+      setLoading(false);
     }
   }, []);
 
   return (
     <div className="p-2 h-screen overflow-y-scroll" suppressHydrationWarning>
       <div className="container mx-auto px-4 py-6">
-        <h1 className="text-2xl font-semibold">Recent Activities</h1>
-        {loading ? ( 
+        <h1 className="text-2xl font-semibold">Settlements</h1>
+        {loading ? (
           <div className="flex justify-center items-center mt-6">
             <div className="loader w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
           </div>
@@ -69,8 +75,8 @@ const RecentActivitiesPage = () => {
           <div className="mt-6 space-y-4">
             {activities.map((activity) => (
               <div
-              key={activity.activityID}
-              className="bg-white p-4 rounded-lg shadow-md"
+                key={activity.id}
+                className="bg-white p-4 rounded-lg shadow-md"
               >
                 <p className="text-gray-700">{activity.description}</p>
                 <p className="text-sm text-gray-400">
@@ -85,4 +91,4 @@ const RecentActivitiesPage = () => {
   );
 };
 
-export default RecentActivitiesPage;
+export default SettlementsPages;

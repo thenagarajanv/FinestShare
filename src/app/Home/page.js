@@ -10,7 +10,7 @@ export async function generateMetadata() {
 const Home = () => {
     return (
         <div>
-            <div className="">
+            <div className="" suppressHydrationWarning>
                 <HomePage />
             </div>
         </div>
