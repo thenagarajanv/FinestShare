@@ -58,9 +58,9 @@ const AdminPage = () => {
       {
         label: "Statistics",
         data: [
-          analyticsData?.users || 0,
-          analyticsData?.groups || 0,
-          analyticsData?.expenses || 0,
+          analyticsData?.users,
+          analyticsData?.groups,
+          analyticsData?.expenses,
         ],
         backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
       },
