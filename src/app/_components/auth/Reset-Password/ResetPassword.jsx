@@ -51,7 +51,7 @@ const NewPassword = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900" suppressHydrationWarning>
       <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
         <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
           Reset Password

@@ -43,7 +43,14 @@ const ExpenseDetails = () => {
       }
 
       const data = await response.json();
-      setExpenses(data); 
+
+      const sortedExpenses = data.sort((a, b) => {
+        const dateA = new Date(a.date).setHours(0, 0, 0, 0); 
+        const dateB = new Date(b.date).setHours(0, 0, 0, 0);
+        return dateB - dateA;
+      });
+      
+      setExpenses(sortedExpenses); 
     } catch (err) {
       setError("Failed to fetch expenses");
     }

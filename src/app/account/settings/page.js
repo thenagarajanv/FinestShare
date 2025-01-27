@@ -13,6 +13,7 @@ const SettingsPage = () => {
   const [newAvatar, setNewAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [showPassword, setShowPassword] = useState(false); 
+  const [upiID, setupiID] = useState("");
 
   const router = useRouter();
 
@@ -67,7 +68,14 @@ const SettingsPage = () => {
     if (newPhone !== (userData.phone || "None")) updatedData.phone = newPhone;
     if (newPassword) updatedData.password = newPassword;
     if (newAvatar) updatedData.image = avatarPreview;
-  
+    if (upiID) updatedData.upiID = upiID;
+    const upiIDRegex = /^[a-zA-Z0-9.\-_]{2,}@([a-zA-Z]{2,})(\.[a-zA-Z]{2,})?$/;
+    
+    if (upiID && !upiIDRegex.test(upiID)) {
+      alert("Please enter a valid UPI ID (e.g., username@bank).");
+      return;
+    }
+    
     if (Object.keys(updatedData).length === 0) {
       alert("No changes to save.");
       return;
@@ -144,8 +152,8 @@ const SettingsPage = () => {
 
   return (
     <div>
-      <InternalNavbar />
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <InternalNavbar  />
+      <div className="flex justify-center items-center min-h-screen bg-gray-100" suppressHydrationWarning>
         <div className="container mx-auto px-4 py-6 max-w-xl bg-white rounded-lg shadow-md">
           <h1 className="text-2xl font-semibold text-center">Your Account</h1>
           <div className="mt-6">
@@ -203,6 +211,20 @@ const SettingsPage = () => {
                    disabled/>
                 ) : (
                   <span>{userData.email || "None"}</span>
+                )}
+              </div>
+
+              <div className="flex justify-between items-center mt-4">
+                <label className="font-medium">UPI ID</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={upiID}
+                    onChange={(e) => setupiID(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg"
+                   />
+                ) : (
+                  <span>{userData.upiID || "None"}</span>
                 )}
               </div>
 

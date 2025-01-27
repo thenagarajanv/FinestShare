@@ -53,7 +53,7 @@ const HomePage = () => {
 
   return (
     <div
-    className="min-h-screen">
+    className="min-h-screen" suppressHydrationWarning>
       <Navbar />
     <div className="flex  flex-col min-h-screen">
       <main
@@ -120,13 +120,14 @@ const HomePage = () => {
         </div>
         <div className="lg:w-1/2 flex justify-center mb-8 lg:mb-0 ">
           <div className="w-48  h-48 sm:w-64 sm:h-64 lg:w-96 lg:h-96">
-            <Image
-              src={state.selectedItem.itemsImage}
-              alt={state.selectedItem.itemsName}
-              className="w-full h-full   object-contain -z-10"
-              width={600}
-              height={600}
-              />
+          <Image
+            src={state.selectedItem.itemsImage}
+            alt={state.selectedItem.itemsName}
+            className="w-full h-full object-contain -z-10"
+            width={600} 
+            height={600} 
+            priority 
+          />
           </div>
         </div>
       </main>
