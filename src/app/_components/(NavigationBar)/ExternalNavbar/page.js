@@ -35,13 +35,12 @@ const ExternalNavbar = () => {
           onMouseEnter={() => setIsHovering(true)} 
           onMouseLeave={() => setIsHovering(false)} 
         >
-            <div className="flex font-basement align-middle items-center text-center uppercase justify-center text-white  text-xl font-extrabold">
+            <div  onClick={() => router.push("/")} className="flex font-basement align-middle items-center text-center uppercase justify-center text-white  text-xl font-extrabold">
               Finest
             <img
             id="logo"
             src="/img/pnglogo.png"
             className={` h-[50px] cursor-pointer`}
-            onClick={() => router.push("/")}
             alt="Logo"
             />
             SHARE

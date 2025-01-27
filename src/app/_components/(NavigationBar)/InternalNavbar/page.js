@@ -63,7 +63,7 @@ const InternalNavbar = () => {
           onMouseEnter={() => setIsHovering(true)} 
           onMouseLeave={() => setIsHovering(false)} 
         >
-          <div className="flex align-middle items-center leading-0   text-center uppercase justify-center text-white  text-xl font-extrabold">
+          <div  onClick={() => router.push("/")} className="flex align-middle items-center leading-0   text-center uppercase justify-center text-white  text-xl font-extrabold">
               Finest
             <Image
             width={200}
