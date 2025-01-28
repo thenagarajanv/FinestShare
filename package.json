@@ -13,7 +13,6 @@
     "eslint-plugin-next": "^0.0.0",
     "file-saver": "^2.0.5",
     "next": "15.1.4",
-    "qrcode.react": "^4.2.0",
     "razorpay": "^2.9.5",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",

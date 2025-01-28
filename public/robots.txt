@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /login/
+Disallow: /register/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /user-profile/
+Disallow: /settings/
+
+Allow: /
+
+Sitemap: https://finestshare.vercel.app/sitemap.xml
