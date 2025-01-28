@@ -3,10 +3,9 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /login/
 Disallow: /register/
-Disallow: /cart/
-Disallow: /checkout/
-Disallow: /user-profile/
-Disallow: /settings/
+Disallow: /forget-password
+Disallow: /account/
+Disallow: /setting/
 
 Allow: /
 
