@@ -174,7 +174,7 @@ import { usePathname, useRouter } from "next/navigation";const EditGroup = () =>
         <h2 className="text-sm font-bold text-gray-500 mb-2">Group Members</h2>
         <div className="space-y-4">
           {members.map((member, index) => (
-            <div key={index} className="flex items-center gap-4">
+            <div key={index} className="flex flex-wrap items-center gap-4">
               <input
                 type="text"
                 value={member.name}
