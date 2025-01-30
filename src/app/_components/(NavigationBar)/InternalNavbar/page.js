@@ -73,12 +73,9 @@ const InternalNavbar = () => {
             className={` h-12 w-12  cursor-pointer`}
             onClick={() => router.push("/")}
             alt="Logo"
-            />
-           
-
+            /> 
             SHARE
-           
-            </div>
+          </div>
         </div>
 
           <div className="hidden md:flex flex-col md:flex-row gap-4">
@@ -103,20 +100,20 @@ const InternalNavbar = () => {
                     {userRole.toLowerCase() === "admin" && (
                       <a
                         href="/admin"
-                        className={"block px-4 py-2 text-gray-700 hover:bg-gray-100 ${}"} 
+                        className={"block px-4 py-2 text-white-700 hover:bg-gray-100 ${}"} 
                       >
                         Admin Dashboard
                       </a>
                     )}
                     <a
                       href="/dashboard"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-white-700 hover:bg-gray-100"
                     >
                       Dashboard
                     </a>
                     <a
                       href="/account/settings"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-white-700 hover:bg-gray-100"
                     >
                       Settings
                     </a>
@@ -150,7 +147,7 @@ const InternalNavbar = () => {
           <div className="md:hidden flex items-center">
             <button
               type="button"
-              className="text-gray-600 hover:text-purple-600 focus:outline-none"
+              className="text-white-600 hover:text-purple-600 focus:outline-none"
               onClick={toggleMenu}
             >
               {isMenuOpen ? (
@@ -191,21 +188,29 @@ const InternalNavbar = () => {
 
       {isMenuOpen && (
         <div className="md:hidden">
-          <div className="px-4 pt-2 pb-3 space-y-1">
+          <div className="px-4 pt-2 pb-3 space-y-1 bg-white">
             {isLoggedIn ? (
               <div className="space-y-1">
                 <a
                   href="/account/settings"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  className="block px-4 py-2 text-white-700 hover:bg-gray-100"
                 >
                   Your Account
                 </a>
                 {userRole.toLowerCase() === "admin" && (
                   <a 
                     href="/admin"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    className="block px-4 py-2 text-white-700 hover:bg-gray-100"
                   >
                     Admin Dashboard
+                  </a>
+                )}
+                {userRole.toLowerCase() === "admin" && (
+                  <a 
+                    href="/dashboard"
+                    className="block px-4 py-2 text-white-700 hover:bg-gray-100"
+                  >
+                    Dashboard
                   </a>
                 )}
                 <button

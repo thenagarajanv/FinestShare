@@ -121,9 +121,10 @@ const ExpenseDetails = () => {
         <Line data={chartData} />
       </div>
 
+      <h1 className="text-black font-extrabold mb-2">Expense List</h1>
+      <div className="max-w-full overflow-x-auto max-md:max-w-screen-sm">
       {expenses.length > 0 ? (
         <div>
-          <h2>Expense List</h2>
           <table
             border="1"
             style={{
@@ -157,8 +158,12 @@ const ExpenseDetails = () => {
               ))}
             </tbody>
           </table>
-
-          <button
+        </div>
+      ) : (
+        <p>No expenses found.</p>
+      )}
+      </div>
+      <button
             onClick={exportToCSV}
             style={{
               padding: "10px 15px",
@@ -171,10 +176,6 @@ const ExpenseDetails = () => {
           >
             Export as CSV
           </button>
-        </div>
-      ) : (
-        <p>No expenses found.</p>
-      )}
       </div>
    </div>
   );

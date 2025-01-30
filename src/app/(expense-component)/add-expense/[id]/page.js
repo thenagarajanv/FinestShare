@@ -1,12 +1,14 @@
 "use client";
 
 import InternalNavbar from "@/app/_components/(NavigationBar)/InternalNavbar/page";
-import { usePathname } from "next/navigation";
+import { usePathname , useRouter} from "next/navigation";
+// import {  } from "next/router";
 import React, { useState, useEffect, memo } from "react";
 
 const ExpenseComponent = () => {
   const groupID = usePathname("").split("/").at(2);
   const token = localStorage.getItem("token");
+  const router = useRouter();
 
   const [description, setDescription] = useState("");
   const [groupList, setGroupList] = useState([]);
@@ -78,56 +80,6 @@ const ExpenseComponent = () => {
 
     fetchUserData();
   }, []);
-
-//   const submitExpense = async () => {
-//     if (!userID) {
-//       console.error('User ID is not available yet.');
-//       return; 
-//     }
-  
-//     const expenseData = {
-//       amount: parseFloat(amount),
-//       description: description.trim(), 
-//       paidBy: parseInt(userID), 
-//       groupID: parseInt(groupID),
-//       type: "group", 
-//       category: category.trim(), 
-//       image: "dinner.jpg", 
-//       splits: Object.keys(splitAmounts).map((userID) => ({
-//         userID: parseInt(userID), 
-//         amount: parseFloat(splitAmounts[userID]), 
-//       })),
-//     };
-    
-//   try {
-//     const response = await fetch('https://finestshare-backend.onrender.com/expense/add', {
-//       method: 'POST',
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(expenseData),
-//     });
-
-//     console.log('Request payload:', expenseData);
-
-//     const data = await response.json();
-
-//     if (response.ok) {
-//       console.log('Expense created successfully:', data);
-//       alert('Expense submitted successfully!');
-//     } else {
-//       console.error('Failed to create expense.', {
-//         status: response.status,
-//         responseData: data,
-//       });
-//       alert(`Failed to submit expense. Error: ${data.message || response.statusText}`);
-//     }
-//   } catch (error) {
-//     console.error('Error submitting expense:', error);
-//     alert('An unexpected error occurred while submitting the expense. Please try again.');
-//   }
-// };
 
 const validateForm = () => {
   if (!amount || parseFloat(amount) <= 0) {
@@ -203,6 +155,8 @@ const submitExpense = async () => {
 
     if (response.ok) {
       alert("Expense submitted successfully!");
+      router.push("/dashboard");
+      
     } else {
       alert(`Failed to submit expense. Error: ${data.message || response.statusText}`);
     }
@@ -350,7 +304,6 @@ const submitExpense = async () => {
       selectedSplitters.forEach(([userID]) => {
         initialSplit[userID] = amount / selectedSplitters.length;
       });
-  
       setUserAmounts(initialSplit);
     }
   }, [amount, activeContainer, selectedSplitters.length]); 
@@ -358,7 +311,6 @@ const submitExpense = async () => {
   
   const handleExactAmountChange = (e, userID) => {
     const newAmount = parseFloat(e.target.value) || 0;
-  
     setUserAmounts((prev) => ({
       ...prev,
       [userID]: newAmount,
@@ -367,9 +319,7 @@ const submitExpense = async () => {
 
   useEffect(() => {
     const total = Object.values(userAmounts).reduce((acc, val) => acc + val, 0);
-  
     setTotalExactAmount(total);
-
     setTotal(total);
     if (Math.abs(total - amount) <= 0.01) {
       setWarning(false); 

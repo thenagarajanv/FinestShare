@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale,LinearScale,BarElement,PointElement,LineElement } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
-import Image from "next/image";
+
+
 ChartJS.register(
   Title,
   Tooltip,
@@ -360,39 +361,40 @@ const AdminPage = () => {
     switch (activeView) {
       case "user-list":
         return (
-          <div className="p-8 bg-gray-50 min-h-screen cursor-no" suppressHydrationWarning>
+          <div className="p-8 bg-gray-50 min-h-screen md:flex-col-reverse">
             <div className="flex justify-center items-center">
               <h1 className="text-2xl font-bold mb-6 text-gray-700">User List</h1>
             </div>
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
-              <table className="min-w-full border-collapse">
-                <thead className="text-center">
-                  <tr className="bg-gray-200 text-gray-600 text-sm uppercase font-semibold">
-                    <th className="px-6 py-3 text-left">ID</th>
-                    <th className="px-6 py-3 text-center">Profile Picture</th>
-                    <th className="px-6 py-3 text-left">Name</th>
-                    <th className="px-6 py-3 text-left">Email</th>
-                    <th className="px-6 py-3 text-left">Role</th>
-                    <th className="px-6 py-3 text-left">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan="6" className="text-center px-6 py-3 text-gray-500">
-                        Loading users...
-                      </td>
+              <div className="overflow-x-auto max-h-[80vh] md:overflow-y-auto">
+                <table className="min-w-full border-collapse">
+                  <thead className="text-center">
+                    <tr className="bg-gray-200 text-gray-600 text-sm uppercase font-semibold">
+                      <th className="px-6 py-3 text-left">ID</th>
+                      <th className="px-6 py-3 text-center">Profile Picture</th>
+                      <th className="px-6 py-3 text-left">Name</th>
+                      <th className="px-6 py-3 text-left">Email</th>
+                      <th className="px-6 py-3 text-left">Role</th>
+                      <th className="px-6 py-3 text-left">Actions</th>
                     </tr>
-                  ) : Array.isArray(users) && users.length > 0 ? (
-                    users.map((user) => (
-                      <tr key={user.userID} className="border-b text-gray-700 hover:bg-gray-100">
-                        <td className="px-6 py-3">{user.userID}</td>
+                  </thead>
+                  <tbody>
+                    {loading ? (
+                      <tr>
+                        <td colSpan="6" className="text-center px-6 py-3 text-gray-500">
+                          Loading users...
+                        </td>
+                      </tr>
+                    ) : Array.isArray(users) && users.length > 0 ? (
+                      users.map((user) => (
+                        <tr key={user.userID} className="border-b text-gray-700 hover:bg-gray-100">
+                          <td className="px-6 py-3">{user.userID}</td>
                           <td className="px-6 py-3 text-center">
                             {user.image ? (
                               <img
                                 src={user.image}
                                 alt={user.name}
-                                width={40} 
+                                width={40}
                                 height={40}
                                 className="w-10 h-10 rounded-full object-cover"
                               />
@@ -402,57 +404,60 @@ const AdminPage = () => {
                               </div>
                             )}
                           </td>
-                        <td className="px-6 py-3">{user.name.toLowerCase()}</td>
-                        <td className="px-6 py-3">{user.email.toLowerCase()}</td>
-                        <td className="px-6 py-3">{user.role.toLowerCase()}</td>
-                        <td className="px-6 py-3 flex space-x-2">
-                        <button
-                          onClick={() => handleToggleBlock(user.userID, user.isBlocked)}
-                          style={{
-                            backgroundColor: user.isBlocked ? "green" : "red",
-                            color: "white",
-                            padding: "5px 10px",
-                            border: "none",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {user.isBlocked ? "Unblock" : "Block"}{user.isBlocked}
-                        </button>
-                          <button
-                            onClick={() => handleUserAction("delete", user.userID)}
-                            className="px-4 py-2 bg-gray-500 text-white rounded-md"
-                          >
-                            Delete
-                          </button>
-                          <button
-                            onClick={() => handleUserAction("promote", user.userID)}
-                            className="px-4 py-2 bg-yellow-500 text-white rounded-md"
-                          >
-                            Promote
-                          </button>
+                          <td className="px-6 py-3">{user.name.toLowerCase()}</td>
+                          <td className="px-6 py-3">{user.email.toLowerCase()}</td>
+                          <td className="px-6 py-3">{user.role.toLowerCase()}</td>
+                          <td className="px-6 py-3 flex space-x-2">
+                            <button
+                              onClick={() => handleToggleBlock(user.userID, user.isBlocked)}
+                              style={{
+                                backgroundColor: user.isBlocked ? "green" : "red",
+                                color: "white",
+                                padding: "5px 10px",
+                                border: "none",
+                                borderRadius: "5px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              {user.isBlocked ? "Unblock" : "Block"}{user.isBlocked}
+                            </button>
+                            <button
+                              onClick={() => handleUserAction("delete", user.userID)}
+                              className="px-4 py-2 bg-gray-500 text-white rounded-md"
+                            >
+                              Delete
+                            </button>
+                            <button
+                              onClick={() => handleUserAction("promote", user.userID)}
+                              className="px-4 py-2 bg-yellow-500 text-white rounded-md"
+                            >
+                              Promote
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="6" className="text-center px-6 py-3 text-gray-500">
+                          No users found.
                         </td>
                       </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="6" className="text-center px-6 py-3 text-gray-500">
-                        No users found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         );
+        
         case "feedback":
           return (
-            <div className="p-8 bg-gray-50 min-h-screen cursor-no">
-              <div className="flex justify-center items-center">
-                <h1 className="text-2xl font-bold mb-6 text-gray-700">Feedback</h1>
-              </div>
-              <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            <div className="p-8 bg-gray-50 min-h-screen md:overflow-y-auto">
+            <div className="flex justify-center items-center">
+              <h1 className="text-2xl font-bold mb-6 text-gray-700">Feedback</h1>
+            </div>
+            <div className="bg-white shadow-md rounded-lg overflow-hidden">
+              <div className="overflow-x-auto">
                 <table className="min-w-full border-collapse">
                   <thead className="text-center">
                     <tr className="bg-gray-200 text-gray-600 text-sm uppercase font-semibold">
@@ -504,6 +509,8 @@ const AdminPage = () => {
                 </table>
               </div>
             </div>
+          </div>
+          
           );
           case "admin-dashboard":
             return (
@@ -545,25 +552,25 @@ const AdminPage = () => {
       <div className="flex justify-center space-x-4 my-4">
         <button
           onClick={() => setActiveView("admin-dashboard")}
-          className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          className="px-2 py-2 bg-blue-500 text-white rounded-md"
         >
           Admin Dashboard
         </button>
         <button
           onClick={() => setActiveView("user-list")}
-          className="px-4 py-2 bg-green-500 text-white rounded-md"
+          className="px-2 py-2 bg-green-500 text-white rounded-md"
         >
           User List
         </button>
         <button
           onClick={() => setActiveView("feedback")}
-          className="px-4 py-2 bg-yellow-500 text-white rounded-md"
+          className="px-2 py-2 bg-yellow-500 text-white rounded-md"
         >
           Feedback
         </button>
         <button
           onClick={() => setActiveView("analytics")}
-          className="px-4 py-2 bg-red-500 text-white rounded-md"
+          className="px-2 py-2 bg-red-500 text-white rounded-md"
         >
           Analytics
         </button>

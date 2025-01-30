@@ -36,8 +36,8 @@ const CreateGroup = () => {
   };
 
   const handleSave = async () => {
-    if (!groupName.trim()) {
-      setError("Group name is required.");
+    if (!groupName.trim() || /[^a-zA-Z0-9 ]/.test(groupName)) {
+      setError("Proper Group name is required. No Sybmols alone");
       return;
     }
 
@@ -99,7 +99,7 @@ const CreateGroup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+    <div className="min-h-screen bg-gray-100 flex flex-wrap justify-center items-center">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
         <h1 className="text-lg font-bold text-gray-500 mb-2">START A NEW GROUP</h1>
         <label className="block text-sm font-bold text-gray-800 mb-1">
@@ -119,7 +119,7 @@ const CreateGroup = () => {
         </p>
         <div className="space-y-4">
           {members.map((member, index) => (
-            <div key={index} className="flex items-center gap-4">
+            <div key={index} className="flex flex-wrap items-center gap-4">
               <input
                 type="text"
                 value={member.name}
@@ -136,7 +136,7 @@ const CreateGroup = () => {
                   handleMemberChange(index, "email", e.target.value)
                 }
                 placeholder="Email address (optional)"
-                className="flex-1 border border-gray-300 rounded-md p-2"
+                className="flex-1 border border-gray-300 rounded-md p-2 "
               />
               <button
                 onClick={() => handleRemoveMember(index)}
