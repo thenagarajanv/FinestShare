@@ -32,7 +32,7 @@ const ExpenseDetails = () => {
   const fetchExpenses = async (userID) => {
     try {
       const response = await fetch(
-        `https://finestshare-backend.onrender.com/expense/user/page=1&limit=20`,
+        `https://finestshare-backend.onrender.com/expense/user?page=1&limit=20`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
